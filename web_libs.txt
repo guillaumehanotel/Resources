@@ -1,0 +1,17 @@
+Bootstrap
+Materialize
+Semantic-UI
+
+Normalize
+Jquery
+DataTables
+Jquery Steps
+Jquery DataTables Checkboxes
+Jquery UI
+Jquery Validation
+Open Iconic Master
+Select2
+Summernote
+SweetAlert
+Popper.js
+p5

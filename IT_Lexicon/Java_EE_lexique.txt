@@ -1,0 +1,10 @@
+
+
+
+Spring : Framework qui contient pleins de composants.
+
+
+Spring MVC : Composant de Spring qui permet de construire son app en MVC.
+
+
+Spring boot : est un utilitaire permettant de configurer rapidement des applications, offrant une configuration prête à l'emploi pour créer des applications Spring.

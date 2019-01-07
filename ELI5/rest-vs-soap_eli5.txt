@@ -1,0 +1,11 @@
+First, let's talk about how a web application works.
+
+You have a browser. The browser sends an HTTP request to a web server. The server receives the request, and based on the request, it performs some action- in the case of a browser requesting this reddit page, it renders HTML containing the question, all of the comments, the sidebar, etc. It sends this back to the browser as a response.
+
+Okay, so browser and webserver are linked together by request and response. Commonly, we use that request/response cycle to generate a page that we want displayed in the browser. But wait a second… does it have to be a page? Well, no, not really. The request and response could contain any kind of data we want them to. So this is where a web service comes into play- instead of having a page, we'll instead pass some kind of data objects back and forth.
+
+SOAP and REST are two different approaches to writing web services. At their core, they're two different approaches to modeling a web service. A SOAP based service is what we would call "RPC" or "remote procedure call". Each request we send to a SOAP service represents an operation we want performed by the server. SOAP is a big, complicated specification, which uses XML as the kind of data we want passed back and forth, but it's basically just a variation on the traditional request/response cycle.
+
+REST is what we would call a "resource oriented" approach. Instead of each request representing some abstract operation, each request represents a specific operation on a specific resource- a specific piece of data. REST is not a specification, it's a convention. It's a way that people design their web services. It can pass back any kind of data- it often uses JSON, but could easily do XML (and I've seen versions that use CSV!).
+
+While they operate under very different design constraints, and there are many good reasons to prefer one over the other (REST is, in general, a better, simpler, choice, but SOAP offers certain features that you probably don't need, but when you do, become invaluable), the ELI5 version is that they're basically following the same process your browser uses to fetch a web page, but applying that process in a very different way.

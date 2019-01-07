@@ -1,0 +1,11 @@
+
+
+on se rend bien compte de l'utilité de l'héritage dans les designs patterns, et par exemple dans le pattern strategy pour la classe abstraite.
+
+Quand on hérite d'une classe "normale", la classe fille dispose de toutes les fonctions de la mère. Et elle peut rajouter des méthodes et attributs si nécessaire (c'est la spécialisation).
+
+Parfois on se retrouve avec une tripoté de classe fille qui ont la meme méthode de la classe mère, mais chaque fille implémente la méthode à sa façon. Toutes les autres méthodes héritées restent les memes (on a pas à les changers). Dans ce cas il est bien d'utiliser la classe abstraite en héritage qui fourni la partie générique de l'implémentation et défini explicitement la méthode abstraite à implémenter (le code est bien claire à comprendre) et robuste car sa forme tout héritier à faire l'implémentation.
+Un exemple d'école est l'implémentation des algorithmes de tri. On fait une classe abstraite avec la méthode Trier(Collection ...) et les classes filles se spécialise en tri à bulle, par permutation etc...
+
+La "réalisation" d'interface est à bien discerner d'un héritage.
+L'héritage c'est d'inné, on hérite de père en fils de nos propriétées intrinsèque. Realiser un interface c'est si on peu dire de l'acquis. Ca permet à des objets de classe complètement différente (de nature différente) de communiquer entre elle. Par exemple la classe homme peut réaliser l'interface Chasseur (j'observe ma cible, je la trouve, je l'abbat etc...). Mais ces fonctions un missile aussi peut le faire. Alors que par nature homme hérite de animal et missile de machine.

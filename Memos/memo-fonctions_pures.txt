@@ -1,0 +1,31 @@
+Une fonction pure est une fonction qui n'a aucun effet de bord (immutabilité) et qui a un résultat constant. Elle n'est pas dépendante du contexte extérieure et pour les mêmes paramètres envoyés, elle retournera les mêmes valeurs.
+
+
+	function count_eleves(){
+		return "Il y a " + eleves.length + " eleves !";
+	}
+
+	function ajouterEleve(eleves, eleve){
+		eleves.push(eleve); // mutable donc effet de bord non prévisible
+		return eleves;
+	}
+
+	let eleves = ['Jean', 'Marc'];
+	count_eleves();
+
+L'exemple ci-dessus n'est pas une fonction pure, car la fonction est dépendante d'une variable extérieure qui est susceptible de changer
+selon le contexte.
+
+
+	function count_eleves(eleves){
+		return "Il y a " + eleves.length + " eleves !";
+	}
+
+	function ajouterEleve(eleves, eleve){
+		return [...eleves, eleve]; // immutable, la fonction n'a plus d'effets de bords
+	}
+
+	let eleves = ['Jean', 'Marc'];
+	count_eleves(eleves);
+
+L'exemple ci-dessus est maintenant une fonction pure, car on passe tout ce dont la fonction a besoin en paramètres, elle n'est pas dépendantes de variables extérieures.

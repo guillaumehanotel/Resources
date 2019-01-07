@@ -1,0 +1,407 @@
+Système expert : 
+
+Donner une information que l'on ne connait pas à partir de faits connus.
+Un "expert" est nécessaire pour déduire de nouveaux faits à partir d'autres faits.
+
+
+Exemple : Trouver le nom d'un polygone à partir de ses caractéristiques.
+L'ordre d'un polygone correspond au nombre de ses côtés.
+
+
+
+1) Contenu d'un système expert :
+
+	- Une base de règles qui représente les connaissances de l'expert.
+	- Une base de faits qui représente les connaissances actuelles du système sur un cas précis.
+	- Un moteur d'inférences pour appliquer les règles.
+	- Une interface avec l'utilisateur.
+
+
+						Interface
+						utilisateur
+							|
+							|
+						    V
+						  Moteur 
+					   d'inférences
+					     |      |
+					     |      |
+					    /        \
+					   /          \
+					  \/          \/
+			         Base        Base  
+			       de règles   de faits		  
+
+
+	1.1) Base de règles
+
+		Un système expert contient un ensemble de règles nommé base de règles.
+		Celles-ci représentent les connaissances de l'expert sur le domaine.
+
+		Ces règles sont toujours sous la forme :
+
+		SI (ensemble de conditions) ALORS nouvelle connaissance
+
+		Les conditions d'application d'une règle sont appelées les prémisses.
+		Il peut y avoir plusieurs prémisses, elles sont alors reliées par une coordination ET,
+		signifiant qu'elles doivent toutes être vraies pour que la règle s'applique.
+
+		Les nouvelles connaissances sont appelées conclusions.
+
+		Exemples :
+			SI (ordre vaut 3) ALORS c'est un triangle
+			SI (triangle ET 1 angle droit) ALORS c'est un triangle rectancle
+			SI (triangle ET 2 côtées de même taille) ALORS c'est un triangle isocèle
+			SI (triangle rectangle ET triangle isocèle) ALORS c'est un triangle rectangle isocèle
+			SI (triangle ET côtés tous égaux) ALORS c'est un triangle équilatéral
+
+
+		Les prémisses et conclusions peuvent être demandées sous la forme attribut(valeur), par exemple ordre(3) ou angleDroit(1).
+		La règle du triangle rectangle serait alors :
+
+		SI (ordre(3) ET angleDroit(1)) ALORS polygone(TriangleRectangle) 
+
+
+	1.2) Base de faits
+
+		Les prémisses d'une règle peuvent être de 2 types: 
+
+		- Des connaissances sur le problème fournies par l'utilisateur du système : ce sont les entrées.
+		- Des connaissances issues de l'application de règles : ce sont les faits inférés.
+
+		Ces 2 types de connaissances doivent être enregistrés dans une base faits qui contient toutes les infos 
+		sur le problème.
+
+		Généralement, c'est le dernier fait ajouté qui intéresse vraiment l'utilisateur : il s'agit du but du programme.
+
+
+	1.3) Moteur d'inférence 
+
+		Le moteur d'inférences (ou système d'inférences) est le coeur du système expert.
+
+		Le moteur va permettre de sélectionner et d'appliquer les règles. Cette tâche n'est pas forcément aisée car il peut exister des millers de règles. 
+		De plus, il ne sert à rien d'appliquer une règle déjà utilisée précédemment ou qui ne correspond pas du tout au problème à résoudre.
+
+		C'est aussi le moteur d'inférences qui va ajouter les nouveaux faits à la base de faits, ou y accéder pour vérifier qu'un fait est déjà connu. L'ajout
+		des faits que l'on sait faux est tout aussi intéressant que celui des faits que l'on sait justes. En effet, savoir qu'une forme n'est pas un quadrilatère 
+		permet d'éliminer plusieurs règles d'un coup. 
+
+		Analogie : Jeu du "Qui est-ce ?"
+
+		Le moteur doit pouvoir prendre la décision de s'arrêter pour présenter à l'utilisateur la réponse à sa question. Il doit sonc savoir 
+		quand son but est atteint, ou quand il ne le sera jamais.
+
+
+	1.4) Interface utilisateur
+
+		L'interface qui permet à l'utilisateur d'entrer les données qu'il possède, soit en une seule fois avant de lancer le processus, soit au fur et à mesure des besoins du moteur d'inférences.
+
+
+
+2) Types d'inférences
+
+	Les moteurs d'inférences peuvent enchaîner les règles de différentes façons : c'est ce qu'on appelle le chaînage.
+	Les deux principaux chaînages sont le chaînage avant et le chaînage arrière, mais il existe des moteurs possédant un chaînage mixte.
+
+	2.1) Chaînage avant 
+
+		2.1.1) Principe
+
+			Un moteur à chaînage avant est aussi appelé un moteur à inférences dirigé par les données.
+
+			Dans ce mode de chaînage, on part des données disponibles en base de faits, et on teste pour chaque règle si elle peut s'appliquer ou non.
+			Si oui, on l'applique et on rajoute la conclusion à la base de faits.
+
+			Le moteur explore donc toutes les possibilités, jusqu'à trouver le fait recherché ou jusqu'à ne plus pouvoir appliquer de nouvelles règles.
+
+		2.1.2) Application à un exemple
+
+			- L'ordre vaut 3
+			- Il y a un angle droit
+			- Deux côtés sont de même taille
+
+			On commence par appliquer la règle suivante, qui ajoute dans la base de faits que la forme est un triangle :
+
+				SI (ordre vaut 3) ALORS c'est un triangle
+
+			On peut ensuite en déduire que c'est un triangle rectangle grâce à la règle suivante :
+
+				SI (triangle ET 1 angle droit) ALORS c'est un triangle rectangle
+
+			De même, on sait que c'est un triangle isocèle :
+
+				SI (triangle ET 2 côtés de même taille) ALORS c'est un triangle isocèle
+
+			Enfin, en sachant qu'il s'agit d'un triangle rectangle et d'un triangle isocèle, on peut appliquer :
+
+				SI (triangle rectangle ET triangle isocèle) ALORS c'est un triangle rectangle isocèle
+
+
+			Comme il n'y a plus de règles applicables, le moteur d'inférences d'arrete. L'utilisateur est informé 
+			que son polygone est un triangle rectangle isocèle.
+
+	2.2) Chaînage arrière
+
+		2.2.1) Principe 
+
+			Les moteurs d'inférences à chaînage arrière sont aussi dits dirigés par le but.
+
+			Cette fois, on part des faits que l'on souhaiterait obtenir et on cherche une règle qui pourrait permettre d'obtenir ce fait. 
+			On rajoute alors toutes les prémisses de cette règle dans les nouveaux buts à atteindre.
+
+			On réitère, jusqu'à ce que les nouveaux buts à atteindre soient présents dans la base de faits. Si un fait est absent de la 
+			base de faits ou prouvé comme faux, alors on sait que la règle ne peut pas s'appliquer. Ces moteurs ont donc un mécanisme (le backtracking) 
+			leur permettant de passer à une nouvelle règle, qui serait un nouveau moyen de prouver le fait.
+
+			Si plus aucune règle ne peut mener au but recherché, alors celui-ci est considéré comme faux.
+
+			Ce mode de chaînage est celui présent par défaut dans le langage Prolog, dédié aux systèmes experts.
+
+		2.2.2) Application à un exemple
+
+			On reprend l'exemple précédent, à savoir un polygone pour lequel :
+
+			- L'ordre vaut 3
+			- Il y a un angle droit
+			- Deux côtés sont de même taille
+
+			On demande au logiciel si le triangle est rectangle isocèle. C'est notre premier but. Le moteur recherche une règle permettant
+			d'obtenir ce fait, il n'y en a qu'une :
+
+				SI (triangle rectangle ET triangle isocèle) ALORS c'est un triangle rectangle isocèle
+
+			Le moteur ajoute donc les buts "triangle rectangle" et "triangle isocèle" à sa liste de buts. Il commence par chercher une règle 
+			permettant de prouver qu'il s'agit d'un triangle rectangle. Là encore, nous n'avons qu'une règle.*
+
+				SI (triangle ET angle droit) ALORS c'est un triangle rectangle
+
+			Il obtient ainsi 2 nouveaux buts : s'agit-il d'un triangle et a-t-il un angle droit ? La présence d'un angle droit est déjà en base de faits
+			ce but est donc atteint. Pour le triangle, il a besoin de la règle suivante :
+
+				SI (ordre vaut 3) ALORS c'est un triangle
+
+			La base de faits précise que l'ordre a une valeur de 3, la règle est donc prouvée. Le fait triangle peut ainsi être ajouté à la base de faits
+			et enlevé des buts à atteindre, tout comme le fait "triangle rectangle". Il ne lui reste alors plus que "triangle isocèle" à prouver.
+
+			De la même façon, il cherche une règle possédant ce but :
+
+				SI (triangle ET 2 côtés de même taille) ALORS c'est un triangle isocèle
+
+			Le fait que la forme soit un triangle est déjà en base de faits (on l'a obtenu juste avant) et la présence de deux côtés de même taille aussi. On rajouter que c'est un triangle isocèle.
+
+			Le programme finit par retourner à son but initial, à savoir s'il s'agissait d'un triangle rectangle isocèle. Comme les faits "triangle rectangle" et "triangle isocèle" sont maintenant prouvés, il peut en conclure que oui, la forme est un triangle rectangle isocèle, et l'indiquer à l'utlisateur.
+
+
+		2.2.3) Chaînage mixte
+
+
+			Chaque mode de chaînage a ses avantages et ses inconvénients :
+
+			- Le chaînage avant permet de découvrir en permanence de nouveaux faits, mais il risque d'appliquer et de tester de 
+			nombreuses règles qui ne concernent pas l'information recherchée par l'utilisateur. Il est donc plus adapté à l'exploration.
+
+			- Le chaînage arrière permet de se concentrer sur un but précis (ou plusieurs buts), mais il va tester de nombreuses possibilités qui seront 
+			finalement démontrées comme fausses. Ainsi, il va essayer de prouver des règles qui ne pourront pas l'être. Sa gestion est aussi plus complexe
+			(car il doit gérer la liste des buts et permettre le backtracking).
+
+			Un mélange des deux chaînages a alors été proposé : le chaînage mixte. Dans ce nouveau chaînage, on va alterner des périodes en chaînage avant (pour déduire de nouveaux faits de ceux que l'on vient de prouver) et des périodes de chaînage arrière (dans lesquelles on cherche de nouveaux buts à prouver).
+
+			C'est donc un savant équilibre entre les deux méthodes de recherche, en fonction de règles de recherche. De plus, on peut alterner les phases de recherche en profondeur aux phases de recherche en largeur selon les buts.
+
+			(Il est peu utilisé car complexe, mais plus efficace)
+
+
+
+3) Etapes de construction d'un système
+
+	Pour créer intégralement un système expert, il est important de suivre différentes étapes qui font entrer en jeu des compétences
+	et donc des profils professionnels différents.
+
+	Globalement, il y a quate étapes présentées dans la figure suivante, avec les principaux rôles nécessaires sous chaque étape.
+
+	Extraction des connaissances   -----> Création du moteur d'inférences -----> Ecriture des règles -------------> Création de l'interface utilisateur
+		- Expert 							- Ingénieur en système expert 		- Ingénieur en système expert 			- Développeur
+		- Interrogateur 					- Développeur 						- Développeur 							- Graphiste
+																														- Ergonome
+																														- Utilisateur
+
+
+
+	3.1) Extraction des connaissances 
+
+		La première étape consiste à extraire les connaissances. Pour cela, il faut trouver un expert qui sera interrogé pour comprendre les règles 
+		sous-jacentes aux décisions qu'il prend dans son travail. Cette phase peut paraître simple mais en fait elle est très complexe. En effet, 
+		un expert ne réfléchit pas par règles, il a des automatismes qu'il faut arriver à lui faire expliciter.
+
+		Prenons l'exemple des insectes. Face à des insectes peu courants ou inconnus, il parait assez facile de déterminer des règles qui permettent d'arriver au résultat voulu. Mais quelles règles applique-t-on pour reconnaître une mouche d'un moustique, un escargot d'une limace, une fourmi d'un cloporte, ou encore une coccinelle d'un gendarme ?
+
+		C'est donc en posant différentes questions à l'expert que l'on pourra l'amener à déterminer lui-même les règles qu'il applique, souvent inconsciemment. Le travail de l'interrogateur est donc primordial, car ce dernier doit indiquer les zones d'ombres, ou les règles qui ne sont pas assez spécifiques pour faire la discrimination entre 2 résultats.
+
+		Cette étape peut être très longue, en particulier sur des domaines vastes. De plus, si le domaine d'application possède des risques, il est important de faire vérifier les règles par plusieurs experts, qui pourront les compléter ou les modifier si besoin est.
+
+		La réussite du système dépend en très grande partie de cette phase. Il ne faut donc pas la négliger en voulant aller trop vite.
+
+
+
+	3.2) Création du moteur d'inférences
+
+		Si le projet utilise un moteur d'inférences existant, cette phase consistera juste à acquérir celui-ci, voire à le configurer.
+
+		Sinon, il faudra implémenter un moteur d'inférences, avec les différenres fonctionnalités voulues. Il faudra aussi à ce moment-là créer la structure de la base de faits, et définir les interactions entre le moteur et les bases(de règles et de faits).
+
+		Le formalisme des règles sera alors fixé, ce qui pourra avoir un impact important sur les phases suivantes.
+
+
+	3.3) Ecriture des règles
+
+		La phase suivante consiste à transformer les différentes règles obtenues lors de l'extraction des connaissances vers le format voulu par le moteur d'inférences.
+
+		A la fin de cette étape, la base de règles doit être complète. Il ne faut pas hésiter à vérifier plusieurs la présence de toutes les règle et leur exactitude, car un erreur à ce niveau peut fausser tout le travail fait avec le ou les experts.
+
+		Un spécialiste du langage du moteur ainsi qu'en système expert sera donc nécessaire pour cette étape.
+
+	3.4) Création de l'interface utilisateur 
+
+		La dernière étape consiste à créer l'interface utilisateur. Nous avons vu précédemment à quel point celle-ci doit être travaillée pour permettre une utilisation simple et juste du moteur d'inférences et des règles.
+
+		Dans une première version, on peut imaginer une interface sous la forme d'entrées/sorties dans une console. Cependant, pour une application grand public, une interface graphique sera à préférer. Il est important de faire intervenir au plus tôt des utilisateurs ou au moins leurs représentants, et des spécialistes en ergonomie et graphisme pour définir les différents écrans.
+
+		Il existe néanmois un cas particulier : si le système expert est utilisé par un autre système informatique (et non un humain), il faudra à la place de créer les canaux de communication entre les programmes (via des API, des fichiers, des flux, des sockets...).
+
+		Une fois le système expert créé, il peut être utilisé.
+
+
+4) Performance et amélioration
+
+	4.1) Critères de performance
+
+		Les performances d'un système expert, surtout s'il est composé de nombreuses règles, sont primordiales. Le premier critère de performance est le temps de réponse. En effet, il faut pouvoir donner une réponse à l'utilisateur dans un temps acceptable.
+
+		Ce temps dépend du problème posé. Par exemple, dans notre système expert de géométrie, le temps de réponse sera acceptable s'il reste de l'ordre de la seconde. Et au vu du nombre de règles, il y a peu de risques d'avoir un temps supérieur.
+
+		Dans un système expert médical, ou pour aider un garagiste, là encore le temps n'est pas la priorité tant qu'il reste de quelques secondes.
+
+		Cependant, si le système expert doit être utilisé dans un environnement dangereux pour prendre une décision (par exemple pour arrêter ou non une machine) 
+		ou doit communiquer avec d'autres systèmes, le temps de réponse va devenir un critère primordial pour la réussite du projet.
+
+		En plus du temps de réponse, il existe un deuxième critère de performance : l'utilisation de la mémoire. En effet, la base de faits va grossir au fur et à mesure de l'applications des règles. Dans un moteur à chaînage arrière, le système doit être installé sur un appareil possédant peu de mémoire (comme un robot), il faudra bien prendre en compte cet aspect.
+
+		Enfin, généralement tous les moyens mis en oeuvre pour optimiser le temps de réponse auront un impact négatif sur la mémoire et vice-versa. Il faut donc trouver le bon compromis en fonction des besoins.
+
+	4.2) Amélioration des performances par l'écriture des règles
+
+		La première façon d'améliorer les performances est de bien travailler sur l'écriture des règles. En effet, il est souvent possible de limiter leurs nombres.
+
+		Dans notre exemple avec les triangles, on a défini le triangle rectangle isocèle comme étant un triangle rectangle qui est aussi isocèle, mais on aurait pu dire qu'un triangle rectangle isocèle était un triangle possédant un angle droit et deux côtés de même taille. Il est inutile de mettre les deux règles qui, bien que différentes, sont redondantes.
+
+		Il faut aussi savoir quels faits seront ou non rentrés par l'utilisateur. Ainsi, on aurait pu définir nos quadrilatères non par leurs côtés parallèles et leurs angles droits, mais par des propriétés sur les diagonales (par exemple qu'elles se coupent en leur milieu pour le parallélogramme, qu'elles sont de même taile pour le rectangle, ou encore qu'elles se croisent à un angle droit pout le losange). Cependant, si l'utilisateur ne possède pas ces informations, ces règles seront inutiles, alors qu'un moteur à chaînage arrière essaiera de prouver ces buts intermédiaires.
+
+		L'ordre des règles est lui aussi important. En effet, la plupart des moteurs choississent la première règle qui correspond à ce qu'ils cherchent, donc la première dont ils possèdent toutes les prémisses en chaînage avant ou la première ayant comme conclusion le but en cours pour le chaînage arrière. Il est donc intéressant de mettre les règles ayant le plus de chances de s'appliquer en premier (ou les plus faciles à prouver ou à réfuter).
+
+		Certains moteurs utilisent des critères supplémentaires pour choisir les règles comme le nombre de prémisses ou la "fraîcheur" des faits utilisés (pour utiliser au maximum les derniers faits obtenus). Il est donc primordial de bien connaître la façon dont le moteur  d'inférences agit pour optimiser la base de règles.
+
+		La dernière grande façon d'optimiser cette base est de lui ajouter des index. Ceux-ci ont le même but que les index dans les bases de données : ils
+		permettent de trouver plus rapidement les règles utilisant un fait donné, que ce soit en prémisse (pour les moteurs à chaînage avant) ou en conclusion (dans le cas du chaînage arrière).
+
+
+	4.3) Importance de la représentation du problème 
+
+		Un moteur d'inférences, avant d'arriver au résultat attendu, va faire de nombreuses tentatives. Il est important de limiter celles-ci pour optimiser les performances du système expert.
+
+		Nous allons pour cela nous intéresser à un problème très classique : le problème des "8 reines". Le but est de placer sur un échiquier (donc un damier de 8*8 cases), huit reines, qui ne doivent pas entrer en conflit si elles sont sur la même ligne ou la même colonne, ou enfin sur la meme diagonale.
+
+		Il y a 92 solutions possibles pour ce problème.
+
+		Si nous définissons notre problème comme devant nous donner les positions possibles des 8 reines sous la forme (x,y), on voit qu'il y a 64 positions possibles par reine (vu qu'il y a 64 cases). Cela nous amène donc à devoir tester 64⁸ possibilités (soit plus de 280 000 milliards) ! Un algo serait forcément très long à éxecuter, même en testant plusieurs milliers de possibilités à la seconde.
+
+		On peut prendre en compte le fait que chaque reine doit être sur une case différente des précédentes. Ainsi, pour la première reine, on a 64 possibilités. Lorsque l'on cherche à placer la deuxième reine, une case est déjà prise, il ne reste donc que 63 cases possibles. La troisième pourra être placée sur les 62 cases restantes, et ainsi de suite. Au lieu de 64⁸ positions à tester, on n'en a "plus que" 64*63*62*61*60*59*58*57. Ce calcul vaut encore plus de 170 000 milliards, mais cela représente déjà un gain appréciable (d'environ 37%).
+
+		(En maths, on parle d'arrangements. Celui-ci s note A₆₄⁸ et vaut  64!/(64-8)! )
+
+
+		ETC, on peut encore réduire le nombre de possibilités
+
+
+
+
+5) Ajout d'incertitudes et de probabilités
+
+	Les systèmes experts vus jusqu'ici se basaient sur des règles sûres, et les faits étaient forcément vrais ou faux. Cependant, dans la réalité, les choses sont souvent plus complexes. Il faut donc penser à gérer les incertitudes.
+
+	5.1) Apport des incertitudes
+
+		Dans un système expert destiné à identifier des animaux en fonction de caractéristiques physiques, il peut être difficile d'estimer exactement le nombre de doigts aux pattes de l'animal ou la couleur de son ventre. Surtout s'il s'agit d'un prédateur ou d'un animal venimeux, il peut sembler difficile de l'examiner sous tous les angles pour répondre aux questions du système.
+
+		Dans ces cas-là, il peut être intéressant d'ajouter de l'incertitude sur les faits : l'utilisateur pourra donc dire qu'il lui semble que l'animal avait le ventre blanc, mais qu'il n'en n'est pas totalement sûr.
+
+		De plus, dans un système expert médical, il parait dangereux de dire que si les symptômes de maladie sont des douleurs dans tout le corps, de la fièvre et une grande fatigue, alors il s'agit forcément d'une grippe. En effet, des maladies plus rares mais plus dangereuses pourraient se cacher derrière ces symptômes.
+
+		Cette fois, ce sont les règles elles-mêmes qui sont incertaines : il y a de fortes chances que ce soit la grippe, mais ce n'est pas la seule explication possible.
+
+		Ces deux types d'incertitudes (sur les faits et les règles) peuvent être gérés par un système expert pour le rendre plus efficace.
+
+
+	5.2) Faits incertains
+
+		Pour les faits, une probabilité peut leur être ajoutée. Elle indique à quel point l'utilisateur est sûr de lui.
+
+		Ainsi, un fait sûr à 80% indique que l'utilisateur a un petit doute sur le fait. A l'inverse, un fait sûr à 100% indique qu'il est absolument certain.
+
+		Il est assez facile d'ajouter ces probabilités. Cependant, lors de l'applications de règles, il faudra changer le fonctionnement du moteur d'inférences. Celui-ci commencera par calculer la probabilité des prémisses des règles. Il s'agira de la valeur minimum des différents faits.
+
+		Ainsi, si on a une règle du type "Si A et B alors C", et que A est vrai à 75% et B à 85%, on considérera que l'ensemble des prémisses est vrai à 75%.
+
+		Une règle dont la probabilité est inférieure à 50% ne sera généralement pas appliquée.
+
+		Le fait inféré prendra aussi pour valeur de certitude celle de la règle. Dans notre cas précédent, on rajouterait le fait C avec une valeur de 75% à la base de faits.
+
+		De cette façon, on aura une propagation des différentes possibilités.
+
+
+	5.3) Règles incertaines 
+
+		Comme pour les faits, des probabilités peuvent être ajoutées aux règles. On pourra ainsi dire qu'un diagnostic est vrai à 75%, c'est à dire 3 fois sur 4.
+
+		Un fait inféré à partir de cette règle serait donc lui aussi vrai à 75%, les faits inférés prenant comme probabilité celle de la règle qui l'a créé.
+
+		On peut bien évidemment cumuler les probabilités sur les faits et les règles. La probabilité d'un fait inféré est la probabilité des prémisses multipliée par la probabilité de la règle. Ainsi, des prémisses vraies à 80% dans une règle vraie à 75% donneront un fait inféré qui sera vrai à 75*80/100 = 60%.
+
+		Si un même fait inféré est obtenu de différentes façons (par exemple en appliquant plusieurs règles), il faut combiner les probabilités obtenues. Le calcul est ici plus complexe car il nécessite de prendre en compte les probabilités déjà obtenues.
+
+		En effet, si une première règle nous dit que le fait est sûr à 80% et une autre que le fait l'est à 50%, on ne peut pas seulement conclure qu'il est vrai à 80% en prenant la valeur maximale. On dira alors que sur les 20% non sûrs à l'issue de la première de la première règle, la deuxième en comble 50%, soit 10% du total. Le fait inféré aura alors une probabilité de 90% (80+10).
+
+		La formule permettant de calculer cette probabilité totale en fonction d'un fait vrai à une probabilité Pₐ et une nouvelle règle le produisant avec une probabilité Pb est :
+
+			Pₜₒₜₐₗₑ = Pₐ  + (1-Pₐ) * Pb
+
+		On peut remarquer que l'ordre d'application des règles n'est pas important, le résultat obtenu étant tjrs le même.
+
+		Si le besoin s'en fait sentir, il est donc possible d'intégrer ces probabilités à tous les niveaux, pour améliorer les systèmes experts produits.
+
+
+
+6) Domaines d'application
+
+
+
+
+
+
+
+
+
+
+
+			
+
+
+
+
+
+
+
+
+
+
+
+

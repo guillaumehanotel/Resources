@@ -1,0 +1,38 @@
+GIT FLOW
+
+# Initialize in existing repp
+git flow init
+
+<-> FEATURES <->
+
+# Start a new feature (new branch)
+git flow feature start MYFEATURE
+
+# Finish up a feature (merge feature into develop)
+git flow feature finish MYFEATURE
+
+# Publish a feature
+git flow feature publish MYFEATURE (push)
+
+# Getting a published feature (pull)
+git flow feature pull origin MYFEATURE
+
+
+<-> RELEASES <->
+
+# Start a release
+git flow release start RELEASE [BASE]
+
+# Finish up a release
+git flow release finish RELEASE
+
+# Publish a release
+git flow release publish RELEASE
+
+<-> HOTFIXES <->
+
+# Start a hotfix 
+git flow hotfix start VERSION [BASENAME]
+
+# Finish a hotfix
+git flow hotfix finish VERSION

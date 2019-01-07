@@ -1,0 +1,29 @@
+
+
+
+				Accès à élément 		Insertion d'un élément		  Recherche élément
+Tableau                 	 O(1) 					O(n)				O(n)
+Liste chainée			 O(n)					O(1)				O(n)
+
+
+Le tableau est très intéressant lorsqu'on a des données stables et que l'on veut faire des accès fréquents.
+Les listes chainées sont très intéressantes lorsqu'on veut faire des insertions fréquentes
+
+Les Pile et File sont utilisées pour leurs règles strictes d'utilisation, garantissant ainsi une efficacité au détriment de la souplesse.
+
+Elles pourront être implantées avec un tableau ou une liste chainée.
+
+Collections d'objets :
+
+• ArrayList : liste basée sur un tableau dynamique (Vector)
+• LinkedList : liste chaînée
+• PriorityQueue : file d'attente prioritaire
+• Stack : pile
+• Set : ensemble d'objets, non accessibles directement
+• HashSet : éléments non ordonnés, table de hachage
+• TreeSet : éléments ordonnés, arbre binaire de recherche
+
+Map : gère des couples uniques (clé,valeur)
+
+• HashMap : couples non ordonnés, table de hachage
+• TreeMap : couple ordonnés selon la clé, arbre binaire de recherche

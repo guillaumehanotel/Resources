@@ -1,0 +1,1008 @@
+====================================================
+====================================================
+Créer votre premier projet Maven
+====================================================
+====================================================
+
+	Afin de générer le squelette d'un projet, Maven s'appuie sur des archétypes (ce sont des sortes de modèles). 
+	Ici, je vais tout simplement demander à Maven de me générer un squelette à partir de l'archétype quickstart.
+
+	mvn archetype:generate -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.1
+
+	Maven va vous poser des questions afin de personnaliser la génération de votre projet :
+
+	groupId : com.guillaumehanotel.demo
+	artifactId : mon-appli
+	version (1.0-SNAPSHOT) : laissez vide
+	package (com.guillaumehanotel.demo) : laissez vide
+
+	On a obtenu : 
+		- un fichier pom.xml à la racine de mon projet. C'est le fichier de description/configuration du projet Maven.
+		- un répertoire src/main/java. C'est le répertoire contenant les sources de mon application
+		- un répertoire src/test/java. C'est le répertoire contenant les sources des tests JUnit de mon application
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
+  </properties>
+
+  Le build :
+  	mvn package
+
+  L'éxecution : (on pointe le jar + la classe Main)
+  	java -cp target/mon-appli-1.0-SNAPSHOT.jar com.guillaumehanotel.demo.App
+
+
+====================================================
+====================================================
+Décrivez votre projet
+====================================================
+====================================================
+
+
+	====================================================	
+	Les informations de base :
+	====================================================
+
+		<!-- =============================================================== -->
+	    <!-- Informations du projet -->
+	    <!-- =============================================================== -->
+	    <!-- ===== Informations Maven ===== -->
+	    <groupId>org.exemple.demo</groupId>
+	    <artifactId>mon-appli</artifactId>
+	    <version>1.0-SNAPSHOT</version>
+	    <packaging>jar</packaging>
+
+	    <!-- ===== Informations générales ===== -->
+	    <name>Mon Application</name>
+	    <description>
+	        La super application qui sert à faire ceci/cela...
+	    </description>
+	    <url>http://www.exemple.org/mon-appli</url>
+
+	    <!-- ===== Organisation ===== -->
+	    <organization>
+	        <name>Mon Entreprise</name>
+	        <url>http://www.exemple.org</url>
+	    </organization>
+
+	    <!-- ===== Licences ===== -->
+	    <licenses>
+	        <license>
+	            <name>Apache License, Version 2.0</name>
+	            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+	        </license>
+	    </licenses>
+
+	====================================================
+	Les propriétés :
+	====================================================
+
+		Celles-ci sont des sortes de constantes. Elles sont remplacées par leur valeur lors de l'exécution de Maven en utilisant la notation ${maPropriete} (qui sera remplacée par la valeur de la propriété maPropriete).
+
+		    <properties>
+		        <apache.struts.version>2.5.10.1</apache.struts.version>
+		    </properties>
+		    
+		    <dependencies>
+		        <!-- ===== Apache Struts ===== -->
+		        <dependency>
+		            <groupId>org.apache.struts</groupId>
+		            <artifactId>struts2-core</artifactId>
+		            <version>${apache.struts.version}</version>
+		        </dependency>
+		        <dependency>
+		            <groupId>org.apache.struts</groupId>
+		            <artifactId>struts2-json-plugin</artifactId>
+		            <version>${apache.struts.version}</version>
+		        </dependency>
+		    </dependencies>
+
+
+	====================================================
+	Le Build :
+	====================================================
+
+		En plus des informations de base et des propriétés, vous pouvez paramétrer les différents éléments du processus de construction de Maven, qu'on appelle le build.
+
+		La configuration du build se fait grâce à la balise <build> et ses sous-balises.
+
+		Voici un exemple où je définis un chemin de sortie autre que celui par défaut (${project.basedir}/target) :
+
+	    <!-- =============================================================== -->
+	    <!-- Build -->
+	    <!-- =============================================================== -->
+	    <build>
+	        <directory>${project.basedir}/output</directory>
+    	</build>
+
+
+    	Si je reprends le premier projet Maven que nous avons créé dans le chapitre précédant, je peux, par exemple, rendre le JAR généré exécutable en demandant à Maven d'indiquer la classe Main dans le Manifest du JAR :
+
+	    <!-- =============================================================== -->
+	    <!-- Build -->
+	    <!-- =============================================================== -->
+	    <build>
+	        <!-- Gestion des plugins (version) -->
+	        <pluginManagement>
+	            <plugins>
+	                <!-- Plugin responsable de la génération du fichier JAR -->
+	                <plugin>
+	                    <groupId>org.apache.maven.plugins</groupId>
+	                    <artifactId>maven-jar-plugin</artifactId>
+	                    <version>3.0.2</version>
+	                </plugin>
+	            </plugins>
+	        </pluginManagement>
+	        <plugins>
+	            <plugin>
+	                <groupId>org.apache.maven.plugins</groupId>
+	                <artifactId>maven-jar-plugin</artifactId>
+	                <configuration>
+	                    <archive>
+	                        <!-- Création du Manifest pour la définition de la classe Main -->
+	                        <manifest>
+	                            <mainClass>org.exemple.demo.App</mainClass>
+	                        </manifest>
+	                    </archive>
+	                </configuration>
+	            </plugin>
+	        </plugins>
+	    </build>
+
+
+		Après avoir relancé la construction du projet avec mvn package, vous pourrez désormais lancer votre application Java sans indiquer la class main dans la ligne de commande :
+
+		java -jar target/mon-appli-1.0-SNAPSHOT.jar
+
+
+
+
+		Filtrer des fichiers ressources
+
+			<build>
+		        <resources>
+		            <resource>
+		                <directory>src/main/resources</directory>
+		                <filtering>true</filtering>
+		            </resource>
+		        </resources>
+		    </build>
+
+
+	====================================================
+	Les profils
+	====================================================
+
+		Les profils permettent de créer des options dans le build Maven.
+
+		Vous pouvez par exemple envisager deux environnements cibles (un de test, un de production) et embarquer, dans le JAR généré, des fichiers de configurations différents en fonction de la cible. Pour cela, pas besoin de mettre à la main les bons fichiers dans le répeertoire src/main/resources avant le build. Il suffit de créer deux profils (test et prod), chacun définissant un répertoire de fichiers ressources différent :
+
+	    <!-- =============================================================== -->
+	    <!-- Profils -->
+	    <!-- =============================================================== -->
+	    <profiles>
+	        <!-- Profil pour l'environnement de test -->
+	        <profile>
+	            <id>test</id>
+	            <build>
+	                <resources>
+	                    <resource>
+	                        <directory>src/main/resources/conf-test</directory>
+	                    </resource>
+	                </resources>
+	            </build>
+	        </profile>
+	        <!-- Profil pour l'environnement de production -->
+	        <profile>
+	            <id>prod</id>
+	            <build>
+	                <resources>
+	                    <resource>
+	                        <directory>src/main/resources/conf-prod</directory>
+	                    </resource>
+	                </resources>
+	            </build>
+	        </profile>
+	    </profiles>
+
+		Il ne vous reste plus qu'à mettre les fichiers de configuration de test et de production dans leur répertoire ressource respectif et d'activer le bon profil lors du lancement du build Maven grâce à l'option -P :
+
+		# Pour construire un livrable pour l'environnement de test :
+		mvn package -P test
+
+		# Pour construire un livrable pour l'environnement de production :
+		mvn package -P prod
+
+
+
+====================================================
+====================================================
+Découpez votre projet en couches applicatives
+====================================================
+====================================================
+
+	====================================================
+	Le patron MVC
+	====================================================
+
+		Pour rappel, avec cette organisation, lorsqu'un utilisateur interagit avec votre application :
+
+			1) son action est prise en charge par le Contrôleur,
+
+			2) qui fait alors appel au Modèle. Celui-ci va réaliser l'action fonctionnelle et éventuellement interagir avec une base de données.
+
+			3) Une fois le travail du Modèle terminé, le Contrôleur met à jour la Vue qui est renvoyée à l'utilisateur.
+
+
+
+	====================================================
+	Améliorer le patron MVC à l'aide du patron DAO
+	====================================================
+
+
+		Cette organisation est bien, mais il est possible de l'affiner, en structurant notamment la partie Modèle. En effet, cette partie contient tout le cœur de fonctionnement de l'application, de la logique métier à la gestion des données.
+
+		Une manière d'améliorer les chose est d'utiliser par exemple le patron DAO (Data Access Object), permettant de mieux gérer la persistance des données en l'isolant du reste du traitement.
+
+
+
+	====================================================
+	Séparer les responsabilités avec une architecture multi-tiers
+	====================================================
+
+		Avec cette architecture en couches, l'utilisateur interagit avec votre application :
+
+			1) via la couche Présentation. Cette couche contient les parties Contrôleur et Vue du patron MVC.
+
+			2) Une fois l'action utilisateur identifiée, la couche Présentation fait appel à la couche Métier. Celle-ci est responsable de la logique métier de l'application, c'est-à-dire de l'implémentation des règles de gestion fonctionnelles.
+
+			3) Si des accès à la base de données sont nécessaires, alors la couche Métier appelle la couche Persistance. C'est dans cette couche que l'on retrouve le patron DAO.
+
+			4) Et toutes ces couches partagent une « vision commune » du domaine fonctionnel en s'appuyant sur le Modèle. En effet, ce modèle contient les JavaBeans manipulés dans l'application.
+
+		Une chose importante est que chaque couche n'appelle que la couche immédiatement en dessous d'elle et n'a aucune connaissance des couches supérieures.
+
+		Cette approche présente plusieurs avantages :
+
+			- Imaginez que votre projet comporte une application web et des batches de traitement en masse. Eh bien, vous pouvez créer 2 couches de présentation (une pour l'application web, l'autre pour les batches) et partager les mêmes couches métier, persistance et modèle.
+
+			- Un autre avantage est qu'il est possible de développer et tester les couches séparément en mettant en place des interfaces.
+
+
+	====================================================
+	Séparer les couches applicatives avec Maven
+	====================================================
+
+		Les modules Maven
+
+		Vous pouvez matérialiser le découpage de l'architecture multi-tiers grâce à des modules Maven. Chaque couche de l'architecture fait alors l'objet d'un module dédié.
+
+		Les modules sont des sortes de « sous-projets » Maven, rattachés à un projet Maven principal (appelé projet parent). Ils fournissent chacun leurs propres livrables et il est possible de créer des dépendances entres eux.
+
+		Vous remarquez que j'ai renommé la couche persistance en module consumer. J'ai, en effet, généralisé la responsabilité de cette couche à la consommation de « services » externes, par exemple une base de données ou des webservices.
+
+		Ainsi, votre projet Maven principal va devenir un meta-projet, agrégeant des modules. Dans le jargon de Maven, on appelle cela un projet multi-modules.
+
+
+
+
+
+
+====================================================
+====================================================
+Familiarisez-vous avec le cycle de vie du build Maven
+====================================================
+====================================================
+
+	====================================================
+	De quoi est composé le build lifecycle ?
+	====================================================
+
+
+		Quand vous lancez une construction Maven en ligne de commande, vous précisez simplement une phase d'un des build lifecycles et Maven se charge d'exécuter, dans l'ordre, toutes les phases qui composent le build lifecycle jusqu'à la phase indiquée.
+
+		Vous vous rappelez de la commande mvn package? Eh bien dans cette commande, vous indiquiez la phase package du build lifecycledefault. Maven avait alors exécuté les phases validate, compile, test et enfin package.
+
+		Pour les projets multi-modules, quand vous lancez la commande mvn sur le projet parent, Maven lance le build lifecycle dans chaque sous-projet (module), les uns à la suite des autres, en respectant l'ordre des dépendances inter-modules.
+
+		Il vous est aussi possible de chaîner l'exécution de plusieurs build lifecycles dans une seule commande Maven. Si vous lancez mvn clean package par exemple, Maven va :
+
+		dans un premier temps, nettoyer le projet en exécutant le build lifecycle clean ;
+
+		puis, il va lancer le build lifecycle default jusqu'à la phase package.
+
+
+
+	====================================================
+	Les goals
+	====================================================
+
+
+		Nous avons vu qu'un build lifecycle est constitué d'une série de phases. Mais la granularité de l'exécution de Maven est encore plus fine. En effet, les phases sont découpées en tâches. Chaque tâche est assurée par un plugin Maven. Dans le jargon de Maven, ces tâches s'appellent des goals.
+
+		Par exemple, la phase test est réalisée par défaut par le goal surefire:test, c'est-à-dire le goal test du plugin surefire.
+
+		Maven fournit de base un certain nombre de plugins. Rappelez-vous, nous en avions déjà vu un dans la partie précédente quand nous avions ajouté la désignation de la classe Main dans le manifest du fichier JAR à générer :
+
+			<project>
+			    ...
+			    <!-- =============================================================== -->
+			    <!-- Build -->
+			    <!-- =============================================================== -->
+			    <build>
+			        <!-- Gestion des plugins (version) -->
+			        <pluginManagement>
+			            <plugins>
+			                <!-- Plugin responsable de la génération du fichier JAR -->
+			                <plugin>
+			                    <groupId>org.apache.maven.plugins</groupId>
+			                    <artifactId>maven-jar-plugin</artifactId>
+			                    <version>3.0.2</version>
+			                </plugin>
+			            </plugins>
+			        </pluginManagement>
+			        <plugins>
+			            <plugin>
+			                <groupId>org.apache.maven.plugins</groupId>
+			                <artifactId>maven-jar-plugin</artifactId>
+			                <configuration>
+			                    <archive>
+			                        <!-- Création du Manifest pour la définition de la classe Main -->
+			                        <manifest>
+			                            <mainClass>org.exemple.demo.App</mainClass>
+			                        </manifest>
+			                    </archive>
+			                </configuration>
+			            </plugin>
+			        </plugins>
+			    </build>
+			    ...
+			</project>
+
+
+
+	====================================================
+	Résumons
+	====================================================
+
+
+		Afin de construire un projet, Maven s'appuie sur des build lifecycles. Ces build lifecycles sont un enchaînement de différentes étapes : les phases. Les phases sont découpées en tâches, appelées goals, et réalisées par des plugins Maven.
+
+
+
+
+====================================================
+====================================================
+Personnalisez la construction avec les plugins
+====================================================
+====================================================
+
+
+Maintenant que vous avez une meilleure vision de processus d'exécution d'un build Maven, nous allons pouvoir personnaliser la construction de votre projet grâce aux plugins maven.
+
+Le but est d'adapter et d'enrichir le POM afin de coller le plus possible à votre besoin et ainsi d'automatiser au maximum la construction et la génération des livrables de votre projet.
+
+
+
+	====================================================
+	Les plugins déjà câblés aux phases
+	====================================================
+
+
+
+		Rappelez-vous : les phases d'un build lifecycle sont découpées en tâches réalisées par les goals de différents plugins : http://maven.apache.org/ref/3.5.0/maven-core/lifecycles.html.
+
+		Suivant le build lifecycle et le packaging utilisés, différents goals sont câblés par défaut aux différentes phases : http://maven.apache.org/ref/3.5.0/maven-core/default-bindings.html.
+
+		Pour le packaging JAR, voici le câblage par défaut (pour la version 3.5.0 de Maven) :
+
+		<phases>
+		  <process-resources>
+		    org.apache.maven.plugins:maven-resources-plugin:2.6:resources
+		  </process-resources>
+		  <compile>
+		    org.apache.maven.plugins:maven-compiler-plugin:3.1:compile
+		  </compile>
+		  <process-test-resources>
+		    org.apache.maven.plugins:maven-resources-plugin:2.6:testResources
+		  </process-test-resources>
+		  <test-compile>
+		    org.apache.maven.plugins:maven-compiler-plugin:3.1:testCompile
+		  </test-compile>
+		  <test>
+		    org.apache.maven.plugins:maven-surefire-plugin:2.12.4:test
+		  </test>
+		  <package>
+		    org.apache.maven.plugins:maven-jar-plugin:2.4:jar
+		  </package>
+		  <install>
+		    org.apache.maven.plugins:maven-install-plugin:2.4:install
+		  </install>
+		  <deploy>
+		    org.apache.maven.plugins:maven-deploy-plugin:2.7:deploy
+		  </deploy>
+		</phases>
+
+
+
+
+		J'aimerais que lors de la compilation, Maven m'affiche les utilisations de méthodes dépréciées (@Deprecated) ainsi que les avertissements de compilation (warnings).
+
+		Je remarque dans la documentation que la phase compile est assurée par le goal compile du plugin org.apache.maven.plugins:maven-compiler-plugin :
+
+		<phases>
+		    ...
+		    <compile>
+		        org.apache.maven.plugins:maven-compiler-plugin:3.1:compile
+		    </compile>
+		    ...
+		</phases>
+
+
+		Je vais dans la documentation des plugins : https://maven.apache.org/plugins/index.html.
+
+		Et plus précisément dans la documentation du goal compile du plugin maven-compiler-plugin : https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html.
+
+		J'obtiens ainsi une description du goal et la liste des options de configuration qui lui sont applicables.
+
+		Par défaut, ces deux options sont à false. Pour les activer, il y a deux solutions :
+
+			- soit en ajoutant une section <configuration> dans la définition du plugin dans le POM :
+
+				<project>
+				    ...
+				    <!-- =============================================================== -->
+				    <!-- Build -->
+				    <!-- =============================================================== -->
+				    <build>
+				        <plugins>
+				            <plugin>
+				                <groupId>org.apache.maven.plugins</groupId>
+				                <artifactId>maven-compiler-plugin</artifactId>
+				                <version>3.1</version>
+				                <configuration>
+				                    <showDeprecation>true</showDeprecation>
+				                    <showWarnings>true</showWarnings>
+				                </configuration>
+				            </plugin>
+				        </plugins>
+				    </build>
+				    ...
+				</project>
+
+
+			- soit en utilisant les propriétés données par les lignes « User property is: ... » :
+
+				<project>
+				    ...
+				    <!-- =============================================================== -->
+				    <!-- Propriétés -->
+				    <!-- =============================================================== -->
+				    <properties>
+				        <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
+				        <maven.compiler.showWarnings>true</maven.compiler.showWarnings>
+				    </properties>
+				    ...
+				</project>
+
+
+
+
+
+		Définir la classe Main du JAR
+
+			Dans la première partie nous avions déjà vu comment définir la classe Main dans le manifest du JAR généré par Maven.
+			Si je reprends le même principe que dans la section précédente, voici comment j'en suis arrivé à cette configuration.
+
+			1) Dans la documentation, la phase package est assurée par le goal jar du plugin org.apache.maven.plugins:maven-jar-plugin :
+
+			<phases>
+			    ...
+			    <package>
+			        org.apache.maven.plugins:maven-jar-plugin:2.4:jar
+			    </package>
+			    ...
+			</phases>
+
+			2) Je vais dans la documentation du goal jar du plugin maven-jar-plugin : https://maven.apache.org/plugins/maven-jar-plugin/jar-mojo.html.
+
+			3) Je repère l'option archive qui me renvoie à la documentation de Maven Archiver où j'obtiens les éléments de configuration du manifest : http://maven.apache.org/shared/maven-archiver/index.html#class_manifest.
+
+			4) J'en déduis la configuration adéquate et je l'ajoute au POM :
+
+			<project>
+			    ...
+			    <!-- =============================================================== -->
+			    <!-- Build -->
+			    <!-- =============================================================== -->
+			    <build>
+			        <plugins>
+			            <plugin>
+			                <groupId>org.apache.maven.plugins</groupId>
+			                <artifactId>maven-jar-plugin</artifactId>
+			                <version>3.0.2</version>
+			                <configuration>
+			                    <archive>
+			                        <manifest>
+			                            <mainClass>org.exemple.demo.App</mainClass>
+			                        </manifest>
+			                    </archive>
+			                </configuration>
+			            </plugin>
+			        </plugins>
+			    </build>
+			    ...
+			</project>
+
+
+		
+	====================================================
+	Générer les plugins de manière globale
+	====================================================
+
+
+			Il est fortement recommandé de définir les versions des plugins utilisés.
+
+			Comme pour les dépendances, il est possible de le faire de manière globale au projet via la section <pluginManagement> dans le POM parent. Vous pouvez ainsi fixer les versions des plugins mais aussi leur configuration de manière globale.
+
+			Si je reprends les exemples précédents, voici ce que j'obtiens dans le POM parent :
+
+				<project>
+				    ...
+				    <!-- =============================================================== -->
+				    <!-- Build -->
+				    <!-- =============================================================== -->
+				    <build>
+				        <!-- ===== Gestion des plugins ===== -->
+				        <pluginManagement>
+				            <plugins>
+				                <plugin>
+				                    <groupId>org.apache.maven.plugins</groupId>
+				                    <artifactId>maven-compiler-plugin</artifactId>
+				                    <version>3.1</version>
+				                    <configuration>
+				                        <showDeprecation>true</showDeprecation>
+				                        <showWarnings>true</showWarnings>
+				                    </configuration>
+				                </plugin>
+				                <plugin>
+				                    <groupId>org.apache.maven.plugins</groupId>
+				                    <artifactId>maven-jar-plugin</artifactId>
+				                    <version>3.0.2</version>
+				                </plugin>
+				            </plugins>
+				        </pluginManagement>
+				    </build>
+				    ...
+				</project>
+
+
+			Et dans mon module, il ne me reste plus que :
+
+				<project>
+				    ...
+				    <!-- =============================================================== -->
+				    <!-- Build -->
+				    <!-- =============================================================== -->
+				    <build>
+				        <plugins>
+				            <plugin>
+				                <groupId>org.apache.maven.plugins</groupId>
+				                <artifactId>maven-jar-plugin</artifactId>
+				                <configuration>
+				                    <archive>
+				                        <manifest>
+				                            <mainClass>org.exemple.demo.App</mainClass>
+				                        </manifest>
+				                    </archive>
+				                </configuration>
+				            </plugin>
+				        </plugins>
+				    </build>
+				    ...
+				</project>
+
+
+
+			Je n'ai pas mis la configuration de la classe Main dans la section <pluginManagement> du POM parent pour la simple et bonne raison que tous les modules n'ont pas de classe Main (ou du moins pas la même !).
+
+
+
+		
+	====================================================
+	Ajouter de nouveaux plugins dans les phases
+	====================================================
+
+
+
+			J'ai défini 3 profils permettant de spécifier l'environnement cible de ma construction (développement, test, production) :
+
+				<project>
+				    ...
+				    <!-- =============================================================== -->
+				    <!-- Profils -->
+				    <!-- =============================================================== -->
+				    <profiles>
+				        <!-- Profil pour l'environnement de développement -->
+				        <profile>
+				            <id>target-dev</id>
+				            ...
+				        </profile>
+
+				        <!-- Profil pour l'environnement de test -->
+				        <profile>
+				            <id>target-test</id>
+				            ...
+				        </profile>
+
+				        <!-- Profil pour l'environnement de production -->
+				        <profile>
+				            <id>target-prod</id>
+				            ...
+				        </profile>
+				    </profiles>
+				    ...
+				</project>
+
+
+			Lors du build avec Maven, je veux m'assurer qu'au moins un des profils est activé. Je vais pour cela utiliser le goal enforce du plugin maven-enforcer-plugin : https://maven.apache.org/enforcer/maven-enforcer-plugin/.
+
+
+			J'ajoute donc ce plugin. Il faut aussi que je câble son goal enforce à la phase validate du build lifecycle default. Cela se fait grâce à la section <executions> :
+
+				<project>
+				    ...
+				    <build>
+				        <plugins>
+				            <plugin>
+				                <groupId>org.apache.maven.plugins</groupId>
+				                <artifactId>maven-enforcer-plugin</artifactId>
+				                <version>1.4.1</version>
+				                <executions>
+				                    <execution>
+				                        <!-- je choisis un nom unique pour définir cette exécution -->
+				                        <id>enforce-profile-target</id>
+				                        <!-- je branche l'exécution à la phase "validate" -->
+				                        <phase>validate</phase>
+				                        <!-- cette exécution lancera le goal "enforce" -->
+				                        <goals>
+				                            <goal>enforce</goal>
+				                        </goals>
+				                        <!-- La configuration du plugin propre à cette exécution -->
+				                        <configuration>
+				                            <rules>
+				                                <requireActiveProfile>
+				                                    <profiles>target-dev,target-test,target-prod</profiles>
+				                                    <all>false</all>
+				                                </requireActiveProfile>
+				                            </rules>
+				                        </configuration>
+				                    </execution>
+				                </executions>
+				            </plugin>
+				        </plugins>
+				    </build>
+				    ...
+				</project>
+
+
+
+			Si je lance maintenant mon build sans activer de profil target-... cela me renvoie une erreur : 
+			$ mvn package
+
+
+			Alors qu'en activant un des profils, je n'ai plus de problème :
+			$ mvn package -Ptarget-dev
+
+
+	====================================================
+	Conclusion
+	====================================================
+
+
+			Maven fournit un certain nombre de plugins de base. Suivant le build lifecycle et le packaging utilisés, différents goals de ces plugins sont câblés par défaut aux différentes phases :
+
+			http://maven.apache.org/ref/3.5.0/maven-core/default-bindings.html
+
+			http://maven.apache.org/ref/3.5.0/maven-core/lifecycles.html
+
+			Référez-vous à la documentation des plugins pour trouver le plugin qu'il vous faut et connaître son fonctionnement.
+
+			Il est fortement recommandé de définir les versions des plugins utilisés.
+
+			Comme pour les dépendances, il est possible de gérer les plugins de manière globale au projet via la section <pluginManagement> dans le POM parent.
+
+			Vous pouvez câbler des nouveaux goals aux phases grâce aux sections <executions> des plugins.
+
+
+
+
+====================================================
+====================================================
+Packagez vos livrables
+====================================================
+====================================================
+
+
+	Dans le chapitre précédent, nous avons vu comment personnaliser la construction de votre projet Maven avec les plugins. Abordons maintenant la génération des livrables de votre projet.
+
+	Je vais vous montrer comment générer, par exemple, un WAR de votre application web ou un ZIP de vos batches.
+
+	Le but est d'obtenir un livrable contenant tout le nécessaire : votre application, bien sûr, mais aussi ses dépendances, les fichiers de configuration...
+
+	Dans ce chapitre, je m'appuierai sur des exemples concrets portant sur le projet de gestion de tickets d'incidents vu dans les chapitres précédents.
+
+	====================================================
+	Générer un WAR de l'application web
+	====================================================
+			
+		Dans ce premier volet, le but est de générer un fichier WAR pour le déploiement de l'application web.
+
+		Je ne vais pas me contenter simplement de la génération de base du WAR, réalisée par le plugin maven-war-plugin.
+
+		Je vais étoffer le processus de construction afin :
+
+		d'ajouter automatiquement certaines informations du projet dans les JSP ;
+
+		de m'assurer qu'aucune version SNAPSHOT ne soit envoyée en production.
+
+		Filtrer les ressources de la webapp
+		Afin d'ajouter automatiquement certaines informations du projet dans les JSP, je vais utiliser le même mécanisme que pour les fichiers de ressource classiques : le filtrage.
+
+		Cependant, les JSP ne sont pas des ressources classiques, elles doivent être ajoutées au répertoire WEB-INF du WAR. Le plugin maven-war-plugin fait déjà cela et permet également de mettre en place le filtrage de ces web resources.
+
+		Je commence donc par ajouter le plugin maven-war-plugin dans la section <pluginManagement> du POM parent :
+
+			<project>
+			    ...
+			    <build>
+			        <pluginManagement>
+			            <plugins>
+			                <plugin>
+			                    <groupId>org.apache.maven.plugins</groupId>
+			                    <artifactId>maven-war-plugin</artifactId>
+			                    <version>3.1.0</version>
+			                </plugin>
+			                ...
+			            </plugins>
+			        </pluginManagement>
+			    </build>
+			    ...
+			</project>
+
+		Dans l'arborescence standard d'un projet Maven, le répertoire contenant les web resources est src/main/webapp.
+
+		Je configure ensuite le plugin maven-war-plugin dans le module ticket-webapp afin d'activer le filtrage des web resources suivantes :
+
+		jsp/_include/header.jsp : fragment JSP contenant le header de toutes les pages HTML de l'application web. Je vais y injecter le nom « public » de l'application.
+
+		jsp/_include/footer.jsp : fragment JSP contenant le footer de toutes les pages HTML de l'application web. Je vais y injecter notamment le nom de l'organisation et la version de l'application.
+
+		jsp/about.jsp : page « À propos » où je vais injecter quelques informations sur le projet (version, date du build...)
+
+
+			<project>
+			    ...
+			    <build>
+			        <plugins>
+			            <plugin>
+			                <groupId>org.apache.maven.plugins</groupId>
+			                <artifactId>maven-war-plugin</artifactId>
+			                <configuration>
+			                    <webResources>
+			                        <resource>
+			                            <filtering>true</filtering>
+			                            <directory>src/main/webapp</directory>
+			                            <includes>
+			                                <include>jsp/_include/header.jsp</include>
+			                                <include>jsp/_include/footer.jsp</include>
+			                                <include>jsp/about.jsp</include>
+			                            </includes>
+			                        </resource>
+			                    </webResources>
+			                </configuration>
+			            </plugin>
+			            ...
+			        </plugins>
+			    </build>
+			    ...
+			</project>
+
+
+		Je complète ensuite le POM du module ticket-webapp pour ajouter les propriétés utiles pour la suite :
+
+			<project>
+			    ...
+			    <!-- =============================================================== -->
+			    <!-- Propriétés -->
+			    <!-- =============================================================== -->
+			    <properties>
+			        <!-- Le nom "public" de l'application -->
+			        <application.name>TicketTac</application.name>
+			        <!-- Le format à utiliser pour afficher la date du build -->
+			        <maven.build.timestamp.format>dd/MM/yyyy</maven.build.timestamp.format>
+			        <!-- Propriété servant à contourner le bug du non remplacement
+			             de la propriété maven.build.timestamp lors du filtrage des ressources -->
+			        <buildTimestamp>${maven.build.timestamp}</buildTimestamp>
+			    </properties>
+			    ...
+			</project>
+
+
+
+
+		Comme je vous l'indiquais dans la première partie de ce cours, il est intéressant d'ajouter des informations complémentaires dans le POM, comme le nom de l'organisation, l'URL de son site web... Nous allons les utiliser ici !
+
+		Il ne me reste plus qu'à utiliser les propriétés dans les JSP afin que leurs valeurs soient injectées lors du filtrage par le plugin maven-war-plugin :
+
+		jsp/_include/header.jsp :
+
+			<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+			<nav class="navbar navbar-inverse navbar-fixed-top">
+			    <div class="container">
+			        <div class="navbar-header">
+			            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+			                <span class="sr-only">Toggle navigation</span>
+			                <span class="icon-bar"></span>
+			                <span class="icon-bar"></span>
+			                <span class="icon-bar"></span>
+			            </button>
+			            <a class="navbar-brand" href="#">${application.name}</a>
+			        </div>
+			        <div id="navbar" class="collapse navbar-collapse">
+			            <ul class="nav navbar-nav">
+			                <li class="active"><a href="..">Accueil</a></li>
+			                <li><a href="../jsp/about.jsp">A propos</a></li>
+			            </ul>
+			        </div><!--/.nav-collapse -->
+			    </div>
+			</nav>
+
+
+		jsp/_include/footer.jsp :
+
+
+			<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+			<footer class="footer">
+			    <div class="container">
+			        <p>
+			            ${application.name} - version ${project.version}
+			            &copy; <a href="${organization.url}">${organization.name}</a>
+			        </p>
+			    </div>
+			</footer>
+
+			<!-- Bootstrap -->
+			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+			        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+			        crossorigin="anonymous"></script>
+
+
+		jsp/about.jsp :
+
+
+
+				<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+				<!DOCTYPE html>
+				<html lang="fr">
+
+				<head>
+				    <meta charset="utf-8" />
+				    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+				    <meta name="viewport" content="width=device-width, initial-scale=1" />
+				    <title>${application.name} - A propos</title>
+				    <!-- Bootstrap -->
+				    <link rel="stylesheet"
+				          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+				          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+				          crossorigin="anonymous" />
+				    <link rel="stylesheet"
+				          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+				          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+				          crossorigin="anonymous" />
+				    <link rel="stylesheet" href="../style/custom.css" />
+				</head>
+
+
+				<body>
+
+				<%@ include file="_include/header.jsp" %>
+
+				<div class="container">
+				    <ul>
+				        <li>Application : ${application.name}</li>
+				        <li>Version : ${project.version}</li>
+				        <li>Date du build : ${maven.build.timestamp}</li>
+				    </ul>
+				</div>
+
+				<%@ include file="_include/footer.jsp" %>
+				</body>
+				</html>
+
+
+
+		Les vérifications supplémentaires pour la cible « production »
+		Afin de m'assurer qu'aucune version SNAPSHOT ne soit envoyée en production, je vais encore une fois utiliser le plugin maven-enforcer-plugin.
+
+		Cependant, comme cette vérification concerne uniquement les constructions ayant pour cible la production, je vais ajouter l'exécution de ce plugin dans un profil dédié à la cible production. Si je reprends les profils que j'ai créés dans le chapitre précédent, je vais donc ajouter le plugin au build du profil target-prod :
+
+
+			<project>
+			    ...
+			    <!-- =============================================================== -->
+			    <!-- Profils -->
+			    <!-- =============================================================== -->
+			    <profiles>
+			        ...
+			        <profile>
+			            <id>target-prod</id>
+			            <build>
+			                <plugins>
+			                    <plugin>
+			                        <groupId>org.apache.maven.plugins</groupId>
+			                        <artifactId>maven-enforcer-plugin</artifactId>
+			                        <executions>
+			                            <execution>
+			                                <id>enforce-target-prod-no-snaphsot</id>
+			                                <phase>validate</phase>
+			                                <goals>
+			                                    <goal>enforce</goal>
+			                                </goals>
+			                                <configuration>
+			                                    <rules>
+			                                        <!-- Le projet et son parent ne doivent pas être en SNAPSHOT -->
+			                                        <requireReleaseVersion />
+			                                        <!-- Aucune dépendance ne doit être en SNAPSHOT -->
+			                                        <requireReleaseDeps />
+			                                    </rules>
+			                                </configuration>
+			                            </execution>
+			                        </executions>
+			                    </plugin>
+			                </plugins>
+			            </build>
+			        </profile>
+			    </profiles>
+			    ...
+			</project>
+
+
+
+	====================================================
+	Générer une archive pour votre jeu de batches
+	====================================================
+
+
+		L'objectif est de générer une archive (un fichier TAR.GZ et un fichier ZIP) pour le jeu de batches de l'application de gestion de tickets.
+
+		Cette archive contiendra :
+
+			le JAR du module ticket-batch
+
+			les JAR de toutes ses dépendances
+
+			les fichiers de configuration (modifiables facilement par l'administrateur)
+
+			les scripts shell de lancement de chaque batch
+
+		Voici comment je vais organiser l'archive :
+
+			le répertoire bin contiendra les scripts shell de lancement des batches
+
+			le répertoire conf contiendra les fichiers de configuration
+
+			le répertoire lib contiendra le JAR du module ticket-batch ainsi que les JAR des dépendances
+
+
+
+
+
+
+
+

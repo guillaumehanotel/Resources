@@ -1,0 +1,325 @@
+Créer un nouveau repository:
+
+- git init
+
+Ajouter un fichier au repository / Passer de la copie locale à la staging area :
+
+- git add [file]
+
+Ajouter tous les fichiers dans la staging area qui sont déjà connus par git :
+
+- git add -u
+
+Faire un commit / Mettre dans l'historique de git:
+
+- git commit -m "Message"
+
+Faire un commit sans passer par la staging area (sans le add)
+
+- git commit -a 
+
+Indiquer où est le serveur (notre compte) / Créer en parallèle un repository sur github:
+
+- git remote add origin https://github.com/guillaumehanotel/repo.git
+
+Pusher pour la première fois :
+
+- git push -u origin master
+
+Récupérer un projet qui existe :
+
+- git clone [url : https://github.com/user/repo.git]
+
+Pointeur HEAD : pointe vers l'état de la copie locale
+
+Voir l'historique des modifications d'un repository:
+
+- git log    (Ctrl+C)
+
+Voir le contenu d'un commit :
+
+- git show [SHA1 du commit] (git show = git show head)
+
+Naviguer dans l'historique, déplacer le pointeur head vers un commmit antérieur :
+
+- git checkout [SHA1 d'un commit]
+
+Supprimer un fichier de l'historique de git :
+
+- git rm [file]
+
+Renommer un fichier :
+
+- git mv [source] [destination]
+
+4 états : 
+- Non suivi : Git ne connait pas encore le fichier
+- Modifié : Déjà connu, on y a fait des modifications, mais pas encore enregistré
+- Indexé : Fichier ajouté à la staging area (avec le add)
+- Commité : J'ai enregistré la modification (avec le commit)
+
+Voir dans quel état sont les fichiers :
+
+- git status
+
+Connaitre les changements dans ma copie locale / Visualiser les modifications :
+
+- git diff
+
+Connaitre les changements dans la staging area :
+
+- git diff --staged
+
+Ramener un fichier de l'état commité à la staging area : //annuler le commit
+
+- git reset HEAD [file]
+
+Réinitialiser un fichier modifié, annuler une modification de la staging area à la copie locale : // annuler le add
+
+- git checkout -- [file]
+
+Annuler à la fois les modifications dans la staging area et dans la copie locale : // annuler le add et le commit
+
+- git checkout HEAD [file]
+
+Fork : copier le contenu d'un repository, pour pouvoir avoir une copie de travail sur un serveur qui m'appartient, possibilité de travailler dessus de façon indépendante, possibilité de proposer des modifications au repository original
+
+
+--------------------------------
+
+
+Une branche : pointeur sur un commit, branche par défaut : master
+Permet de diverger de la branche principal de développement sans l'impacter
+
+Lister les branches (quelles soient locales ou distantes) :
+
+- git branch -a
+
+Lister les branches distantes :
+
+- git branch -r
+
+Changer de branche :
+
+- git checkout [branch]
+
+Créer une nouvelle branche :
+
+- git branch [branch] ([ref commit])
+
+Pusher cette nouvelle branche :
+
+- git push -u origin [branch]
+
+Créer une nouvelle branche et déplacer le pointeur HEAD vers cette branche :
+
+- git checkout -b [branch] ([ref commit])
+
+Supprimer une branche (supprime l'étiquette de la branche, mais pas les commits) :
+
+- git branch -d [branch]
+
+Si l'on déplace le pointeur HEAD vers un commit, et si on crée un nouveau commit, il sera détaché de la branche master, et il n'appartiendra à aucune branche, il faudra connaitre son SHA1 pour y accéder -> commit orphelin
+Git supprime les commits orphelins
+
+Pour sauvegarder un commit orphelin :
+
+- git branch [new name branch] [ref commit]
+
+
+Merge : ramener une branche vers la branche principal, git va créer un commit de merge qui contient l'ensemble des modifications des 2 branches
+
+Merger une branche vers une autre :
+
+- git merge [branch]  (se mettre dans la branche master et faire "git merge branch")
+
+
+Le merge fast forward : lorsque qu'il y a 2 branches qui n'ont pas diverger(pas compris l'interet)
+
+
+Git refuse par défaut de supprimer une branche non mergée, car les commits deviennent orphelins
+
+Supprimer une branche non mergée :
+
+- git branch -D [branch]
+
+
+
+
+Gérer les conflits de merge entre 2 branches : lorqu'un même fichier a été modifié :
+on peut utiliser git diff pour visualiser les modifs.
+
+Méthode manuelle :
+On ouvre les fichiers et on peut enlever les marqueurs de merge pour garder les 2 lignes, puis git add [fichier en conflit], puis git commit
+
+Annuler le merge :
+
+- git merge --abort
+
+
+Méthode mergetool : outil graphique
+
+- git mergetool
+
+On résout les conflits, on sauvegarde, pas besoin de git add, mais faire le git commit
+
+
+
+Les remotes : un remote est une adresse d'un dépôt distant(sur le web),
+par défaut lors d'un git clone, la remote est 'origin'
+
+
+Connaitre les remotes :
+
+- git remote -v
+
+Afficher les infos d'une remote :
+
+- git remote show [nom]
+
+Ajouter une remote :
+
+- git remote add [nom] [url]
+
+Supprimer une remote :
+
+- git remote rm [nom] [url]
+
+
+
+
+Les branches distantes : une branche distante représente une référence à une branche locale d'une remote,
+branche distante <-> branche locale
+
+Mettre à jour une branche distante :
+
+Synchronise les branches d'une remote :
+
+- git fetch REMOTE
+
+Synchronise les branches de toutes les remotes :
+
+- git fetch --all
+
+Connaitre les informations de tracking (permet de faire une correspondance entre une branche en locale et une branche à distance) :
+
+- git branch -vv
+
+Récupérer les informations d'un serveur :
+
+- git pull (REMOTE BRANCH)
+
+Pousser les informations sur le serveur :
+
+- git push (REMOTE LOCAL_BRANCHE:REMOTE_BRANCHE)
+
+Utiliser une branche distante pour la première fois :
+
+- git checkout -t REMOTE_BRANCH
+
+Pour initialiser les informations de tracking à la création : 
+
+- git checkout -b BRANCH REMOTE_BRANCH
+
+Pousser une nouvelle branche :
+
+- git push -u REMOTE BRANCH
+
+Supprimer une branche distante :
+
+- git push REMOTE --delete BRANCH
+
+
+Les pull request : envoie la possibilité de merger la branche dans la branche principale aux autres personnes : je demande aux collègues de valider ce merge
+
+
+
+
+Modifier le contenu du dernier commit / Ajouter le contenu de la staging area au précédent commit (ne pas avoir fait push avant) :
+
+- git commit --amend
+
+Annuler le contenu d'un commit qui a été partagé / va appliquer une modification inverse :
+
+- git revert [ref]
+
+Annuler le dernier commit d'une branche / déplacer le pointeur de branche / revient à un commit antérieur en oubliant les autres récents ( ne pas avoir fait push) :
+
+- git reset --hard [ref] 
+
+Le stash : le stash permet de mettre de côté des modifications, staher permet de sauvegarder notre travail pour pouvoir le réutiliser après
+
+- git stash ([save ["message"]])
+
+Lister l'ensemble des stash :
+
+- git stash list
+
+Reprendre le contenu du stash et enlever le stash de la liste :
+
+- git stash pop ([--index]) [stash@{N}]
+
+Reprendre le contenu du stash et le garder dans la liste : 
+
+- git stash apply ([--index]) [stash@{N}]
+
+Visualiser le contenu du stash :
+
+- git show stash@{N}
+
+
+Tag : référence fixe vers un commit 
+Tag léger : 
+Tag lourd : toutes les informations du commit
+
+Pour créer un tag léger :
+
+- git tag TAG [ref]
+
+Pour créer un tag lourd :
+
+- git tag -a [-m message] TAG [ref]
+
+Connaitre l'ensemble des tags :
+
+- git tag
+
+Aller sur un tag :
+
+- git checkout [-b NEWBRANCH] TAG
+
+Pour partager un tag :
+
+- git push --tags
+- git push REMOTE TAG
+
+Pour supprimer un tag :
+
+- git tag -d TAG
+
+Pour supprimer un tag à distance :
+
+git push --delete REMOTE TAG 
+
+
+Gitignore : permet d'ignorer certain fichier dans le git status
+Programmer des expressions régulières qui permettent de sélectionner les fichiers à ignorer
+
+*.pyc
+Dossier/
+
+
+Retrouvez les orphelins :
+
+- git reflog
+
+
+
+
+
+
+
+
+
+
+

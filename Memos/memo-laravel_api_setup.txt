@@ -1,0 +1,107 @@
+
+
+## Init New Project :
+
+# Via Laravel Installer (Last version)
+	composer global require "laravel/installer"
+	laravel new App
+
+# Via Composer Create-Project
+	
+	Last Version : 
+	composer create-project --prefer-dist laravel/laravel App
+
+	Specific Version :
+	composer create-project --prefer-dist laravel/laravel App "5.5.*"
+
+
+## Configure Project :
+
+	.env
+
+		APP_NAME=Easytickets
+
+		DB_DATABASE=easytickets
+		DB_USERNAME=homestead
+		DB_PASSWORD=secret
+
+		# Envoie Mail
+		MAIL_DRIVER=smtp
+		MAIL_HOST=smtp.gmail.com
+		MAIL_PORT=587
+		MAIL_USERNAME=guillaumehanotel37@gmail.com
+		MAIL_PASSWORD=
+		MAIL_ENCRYPTION=tls
+		MAIL_FROM_NAME=Easytickets
+
+	config/app.php
+
+		'name' => env('APP_NAME', 'Easytickets'),
+    	'timezone' => 'Europe/Paris',
+    	'locale' => 'fr',
+
+    config/database.php
+
+            'database' => env('DB_DATABASE', 'easytickets'),
+            'username' => env('DB_USERNAME', 'homestead'),
+            'password' => env('DB_PASSWORD', 'secret'),
+
+
+
+ ## Dingo Installation
+
+ 	composer.json
+		"require": {
+		   "dingo/api": "2.0.0-alpha1"
+		} 
+
+	terminal
+		composer update
+		php artisan vendor:publish —provider="Dingo\Api\Provider\LaravelServiceProvider"
+
+	.env
+		API_PREFIX=api
+		API_DEBUG=true
+
+
+	# Disable web routes
+	app/Providers/RouteServiceProvider.php
+		// $this->mapWebRoutes();
+
+	routes/api.php
+		$api = app('Dingo\Api\Routing\Router');
+
+		$api->version('v1', function ($api) {
+
+		    $api->get('/', function () {
+		        return 'Home';
+		    });
+
+		});
+
+
+## JWT Auth Installation
+
+	composer.json
+		"require-dev": {
+	    	"tymon/jwt-auth": "1.0.*"
+		},
+		"minimum-stability": "dev",
+		"prefer-stable": true  
+
+	config/api.php
+		'auth' => [
+		    'jwt' => Dingo\Api\Auth\Provider\JWT::class
+		]
+
+	config/app.php 
+		(providers)
+			Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class
+		(aliases)
+			'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+
+	terminal
+		php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"
+		php artisan jwt:secret
+
+

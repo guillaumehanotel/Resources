@@ -1,0 +1,196 @@
+
+Pour utiliser Vue, il faut créer une instance de Vue en lui passant en paramètre une liste d'attributs :
+
+
+
+	el: l'élément auquel est greffé l'instance de VueJs (#app)
+	data : gros tableau qui contient toutes les variables injectées à la vue.
+	methods : définition des fonctions
+		tous les attributs présents dans data seront accessibles dans les fonctions via this.xxxxx
+
+	computed : définir des propriétés qui dépendent de propriétés de notre instance
+
+# ================================
+# LES DIRECTIVES
+# ================================
+
+# ================================
+# Utiliser des données dans la vue : V-BIND
+# ================================
+
+Le bind au niveau des attributs ne fonctionne pas.
+On ne peut pas faire :
+	
+	<a href="{{ link }}">{{ message }}</a>
+
+Mais on utilise le v-bind avec lequel on met directement la valeur.
+
+	<a v-bind:href="link">{{ message }}</a>
+
+
+# ================================
+# V-IF
+# ================================
+
+Permet d'inclure ou pas un élément dans notre code HTML en fonction d'un booléen
+
+	<div class="ui message" v-if="success">
+        <p>{{ message }}</p>
+    </div>
+
+
+# ================================
+# V-SHOW
+# ================================
+
+Permet d'afficher ou pas un élément dans notre code HTML en fonction d'un booléen
+La différence avec v-if étant que l'élément sera caché et non pas supprimé.
+
+	<div class="ui message" v-show="success">
+        <p>{{ message }}</p>
+    </div>
+
+
+# ================================
+# V-ELSE
+# ================================
+
+Complète un v-if
+
+	<div class="ui error message" v-if="!success">
+	<div class="ui error message" v-else>
+        <p>Echec</p>
+    </div>
+
+# ================================
+# V-FOR
+# ================================
+
+	persons: ['guigui', 'jonimofo', 'kéké', 'léo']
+
+	<ul>
+        <li v-for="person in persons">{{ person }}</li>
+    </ul>
+
+# ================================
+# EVENTS : V-ON
+# ================================
+
+On peut binder une fonction présents dans l'attribut methods de Vue 
+à un évènement avec :
+
+v-on:click="close" ou @click="close"
+
+
+# ================================
+# FORM INPUTS BINDINGS : V-MODEL
+# ================================
+
+On peut binder un champs à une variable grâce à v-model; 
+select / checkbox / text / radio / select
+
+	<input type="checkbox" v-model="success">
+
+
+# ================================
+# CLASS BINDINGS : V-BIND
+# ================================
+
+On peut déterminer la présence d'une classe en fonction d'une variable.
+Ici, la classe 'active' sera ajouté si la variable booléenne isActive est true. 
+	
+	<div v-bind:class="{ active: isActive }"></div>
+
+
+# ================================
+#  LIFE CYCLE
+# ================================
+https://vuejs.org/v2/guide/instance.html#Lifecycle-Diagram
+
+Penser lorsqu'on bind des évènements avec le mounted, de les supprimer dans le destroyed
+
+
+
+# ================================
+#  EVENT MODIFIERS
+# ================================
+
+
+the click event's propagation will be stopped 
+	<a v-on:click.stop="doThis"></a>
+
+the submit event will no longer reload the page
+	<form v-on:submit.prevent="onSubmit"></form>
+
+modifiers can be chained
+	<a v-on:click.stop.prevent="doThat"></a>
+
+just the modifier
+	<form v-on:submit.prevent></form>
+
+use capture mode when adding the event listener -->
+i.e. an event targeting an inner element is handled here before being handled by that element
+	<div v-on:click.capture="doThis">...</div>
+
+only trigger handler if event.target is the element itself
+i.e. not from a child element
+	<div v-on:click.self="doThat">...</div>
+
+
+# ================================
+#  FILTERS
+# ================================
+
+
+
+
+
+
+
+
+
+
+
+Vue.component('tab-posts', { 
+  data: function () {
+  	return {
+      posts: [
+        { 
+        	id: 1, 
+          title: 'Cat Ipsum',
+          content: '<p>Dont wait for the storm to pass, dance in the rain kick up litter decide to want nothing to do with my owner today demand to be let outside at once, and expect owner to wait for me as i think about it cat cat moo moo lick ears lick paws so make meme, make cute face but lick the other cats. Kitty poochy chase imaginary bugs, but stand in front of the computer screen. Sweet beast cat dog hate mouse eat string barf pillow no baths hate everything stare at guinea pigs. My left donut is missing, as is my right loved it, hated it, loved it, hated it scoot butt on the rug cat not kitten around</p>'
+        },
+        { 
+        	id: 2, 
+          title: 'Hipster Ipsum',
+          content: '<p>Bushwick blue bottle scenester helvetica ugh, meh four loko. Put a bird on it lumbersexual franzen shabby chic, street art knausgaard trust fund shaman scenester live-edge mixtape taxidermy viral yuccie succulents. Keytar poke bicycle rights, crucifix street art neutra air plant PBR&B hoodie plaid venmo. Tilde swag art party fanny pack vinyl letterpress venmo jean shorts offal mumblecore. Vice blog gentrify mlkshk tattooed occupy snackwave, hoodie craft beer next level migas 8-bit chartreuse. Trust fund food truck drinking vinegar gochujang.</p>'
+        }
+      ],
+      selectedPost: null
+    }
+  },
+	template: `
+  	<div class="posts-tab">
+    
+      <ul class="posts-sidebar">
+        <li v-for="post in posts"
+            v-bind:key="post.id"
+            v-bind:class="{ selected: post === selectedPost }"
+            v-on:click="selectedPost = post">
+          {{ post.title }}
+        </li>
+      </ul>
+      
+      <div class="selected-post-container">
+      	<div v-if="selectedPost"class="selected-post">
+          <h3>{{ selectedPost.title }}</h3>
+          <div v-html="selectedPost.content"></div>
+        </div>
+        <strong v-else>
+          Click on a blog title to the left to view it.
+        </strong>
+      </div>
+      
+    </div>
+  `
+})

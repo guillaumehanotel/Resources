@@ -1,0 +1,50 @@
+# Liste des box installée
+	vagrant box list
+
+# Installer une box
+	vagrant box add  debian/jessie64
+
+# Création d'un Vagrantfile
+	vagrant init maBox 
+	
+# Démarrer et provisionner une instance d'une box à partir d'un VagrantFile 
+	vagrant up
+
+# Se connecter à la machine créee.
+	vagrant ssh
+
+# Détruire une instance. (depuis le dossier projet ou renseigner le nom de l'environnement)
+	vagrant destroy [name] 
+
+
+2 moyens de gérer ses snapchots :
+
+	- avec une pile de snapshots anonymes
+	- avec des snapshots nommés
+	(soit l'un soit l'autre)
+
+# La pile de snapshots
+
+	vagrant snapshot push
+
+	vagrant snapshot pop
+
+# Les snapshots nommés
+
+	vagrant snapshot save <name>
+
+	vagrant snapshot restore <name>
+
+# Autres 
+
+	vagrant snapshot list
+
+	vagrant snapshot delete <name>
+
+
+
+Problème de shared folder : 
+
+https://stackoverflow.com/questions/40972345/vagrant-synced-folders-not-working-real-time-on-virtualbox
+vagrant plugin install vagrant-vbguest
+

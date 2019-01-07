@@ -1,0 +1,1009 @@
+Variables :
+
+	- Commence par une lettre 
+	- Est composé de lettres et chiffres 
+	- Peut contenir des caractères spéciaux comme le dollar, le trait de soulignement ou le dièse 
+	- Ne doit pas dépasser 30 caractères 
+	- Ne doit pas être un terme réservé par Oracle 
+
+
+	SET SERVEROUTPUT ON 
+	DECLARE 
+	 Myname VARCHAR2(20):= 'John'; 
+	BEGIN 
+	 Myname := 'Steven'; 
+	 DBMS_OUTPUT.PUT_LINE('My name is: '|| Myname); 
+	END; 
+	/ 
+
+
+	Différents types de variables 
+		Variables PL/SQL : 
+			Scalaires (une seule valeur) 
+			Composées 
+			Référence 
+			Large objects (LOB) 
+		Variables non-PL/SQL : 
+			Variables de substitution 
+			Variables hôtes 
+
+
+	DECLARE 
+	emp_job VARCHAR2(9); 
+	count_loop BINARY_INTEGER := 0; 
+	dept_total_sal NUMBER(9,2) := 0; 
+	orderdate DATE := SYSDATE + 7; 
+	c_tax_rate CONSTANT NUMBER(3,2) := 8.25; 
+	valid BOOLEAN NOT NULL := TRUE;
+
+
+
+	emp_lname employees.last_name%TYPE; 
+	balance NUMBER(7,2); 
+	min_balance balance%TYPE := 1000; 
+
+
+
+
+
+
+
+LES CURSEURS ---------------------------------------------
+
+	SQL%FOUND 
+		Attribut booléen qui retourne TRUE si l'ordre
+		SQL le plus récent retourne au moins une ligne. 
+
+	SQL%NOTFOUND 
+		Attribut booléen qui retourne TRUE si l'ordre
+		SQL le plus récent ne retourne pas même une
+		ligne. 
+
+	SQL%ROWCOUNT 
+		Une valeur entière qui représente le nombre de 
+		lignes affectées par l'ordre SQL le plus récent. 
+
+
+
+L'ordre IF ELSIF ELSE ------------------------------------
+
+	DECLARE 
+	myage number := 31; 
+	BEGIN 
+	 IF myage < 11 THEN 
+	 DBMS_OUTPUT.PUT_LINE('I am a child'); 
+	 ELSIF myage < 20 THEN 
+	 DBMS_OUTPUT.PUT_LINE('I am young'); 
+	 ELSIF myage < 30 THEN 
+	 DBMS_OUTPUT.PUT_LINE('I am in my twenties'); 
+	 ELSIF myage < 40 THEN 
+	 DBMS_OUTPUT.PUT_LINE('I am in my thirties'); 
+	 ELSE 
+	 DBMS_OUTPUT.PUT_LINE('I am always young'); 
+	 END IF; 
+	END; 
+
+
+
+L'expression CASE -----------------------------------------
+
+	DECLARE 
+	 grade CHAR(1) := UPPER('&grade'); 
+	 appraisal VARCHAR2(20); 
+	BEGIN 
+	 appraisal := 
+	 CASE grade 
+	 WHEN 'A' THEN 'Excellent' 
+	 WHEN 'B' THEN 'Very Good' 
+	 WHEN 'C' THEN 'Good' 
+	 ELSE 'No such grade' 
+	 END; 
+	 DBMS_OUTPUT.PUT_LINE ('Grade: '|| grade || ' 
+	 Appraisal ' || appraisal); 
+	END;
+
+
+
+Boucles basiques LOOP --------------------------------------
+
+	DECLARE 
+	countryid locations.country_id%TYPE := 'CA'; 
+	loc_id locations.location_id%TYPE; 
+	counter NUMBER(2) := 1; 
+	new_city locations.city%TYPE := 'Montreal'; 
+	BEGIN 
+	 SELECT MAX(location_id) INTO loc_id
+	 FROM locations 
+	 WHERE country_id = countryid; 
+	 LOOP 
+	 INSERT INTO locations(location_id, city, country_id) 
+	 VALUES((loc_id + counter), new_city, countryid); 
+	counter := counter + 1; 
+	 EXIT WHEN counter > 3; 
+	 END LOOP; 
+	END; 
+
+
+Boucles WHILE -----------------------------------------------
+
+	DECLARE 
+	countryid locations.country_id%TYPE := 'CA'; 
+	loc_id locations.location_id%TYPE; 
+	new_city locations.city%TYPE := 'Montreal'; 
+	counter NUMBER := 1; 
+	BEGIN 
+	 SELECT MAX(location_id) INTO loc_id
+	 FROM locations WHERE country_id = countryid; 
+	 WHILE counter <= 3 LOOP 
+	 INSERT INTO locations(location_id,city,country_id) 
+	 VALUES((loc_id + counter), new_city, countryid); 
+	 counter := counter + 1; 
+	 END LOOP; 
+	END; 
+
+
+Boucles FOR --------------------------------------------------
+
+	DECLARE 
+	 countryid locations.country_id%TYPE := 'CA'; 
+	 loc_id locations.location_id%TYPE; 
+	 new_city locations.city%TYPE := 'Montreal'; 
+	BEGIN 
+	 SELECT MAX(location_id) INTO loc_id
+	 FROM locations 
+	 WHERE country_id = countryid; 
+	 FOR i IN 1..3 LOOP 
+	 INSERT INTO locations(location_id, city, 
+	country_id) 
+	 VALUES((loc_id + i ), new_city, countryid ); 
+	 END LOOP; 
+	END; 
+
+
+
+Structure de contrôle itérative : boucle ----------------------
+
+	- Utiliser la boucle basique lorsque les ordres doivent s'exécuter au moins une fois 
+	- Utiliser la boucle WHILE lorsque la condition doit être 
+	évaluée avant chaque itération 
+	- Utiliser la boucle FOR si le nombre d'itérations est 
+	connu
+
+
+
+Boucles imbriquées et labels -----------------------------------
+
+	BEGIN 
+	<<Outer_loop>> 
+	LOOP counter := counter+1; 
+	 EXIT WHEN counter>10; 
+	<<Inner_loop>> 
+	LOOP 
+	 ... 
+	EXIT Outer_loop WHEN total_done = 'YES'; 
+	 -- Leave both loops
+	EXIT WHEN inner_done = 'YES'; 
+	 -- Leave inner loop only
+	 ... 
+	END LOOP Inner_loop; 
+	... 
+	END LOOP Outer_loop; 
+	END; 	
+
+
+
+
+Types de données composés --------------------------------------
+
+	- Peuvent contenir plusieurs valeurs, contrairement aux 
+	scalaires 
+	- Sont de deux types : 
+		- PL/SQL records 
+		- PL/SQL collections :
+			- Tables INDEX BY ou arrays associatifs 
+			- Tables imbriquées 
+			- VARRAY
+
+	Utiliser des records pour : 
+	- Stocker plusieurs valeurs de différents types 
+	- Une seule occurrence à la fois 
+	Utiliser des collections pour : 
+	- Stocker des valeurs de mêmes types 
+	- Plusieurs occurrences à la fois 
+
+
+RECORDS ----------------------------------------------------------
+
+	TYPE emp_record_type IS RECORD (
+	last_name VARCHAR2(25), job_id VARCHAR2(10), salary NUMBER(8,2)); 
+	emp_record emp_record_type; 
+
+	%ROWTYPE
+		- Le nombre et le type des colonnes n'a plus d'importance 
+		- Le nombre et le type des colonnes peut changer sans impact 
+		- Récupère simplement les lignes issues de SELECT *
+
+		DEFINE employee_number = 124 
+		DECLARE 
+		 emp_rec employees%ROWTYPE; 
+		BEGIN 
+		 SELECT * INTO emp_rec FROM employees 
+		 WHERE employee_id = &employee_number; 
+		 INSERT INTO retired_emps( empno, ename, job, mgr, 
+		hiredate, leavedate, sal, comm, deptno) 
+		 VALUES (emp_rec.employee_id, emp_rec.last_name, 
+		emp_rec.job_id,emp_rec.manager_id, 
+		emp_rec.hire_date, SYSDATE, emp_rec.salary, 
+		emp_rec.commission_pct, 
+		emp_rec.department_id); 
+		END; 
+
+		Insérer un record avec %ROWTYPE
+			INSERT INTO retired_emps VALUES emp_rec; 
+
+		Mettre une ligne à jour avec un record
+			UPDATE retired_emps SET ROW = emp_rec WHERE empno=&employee_number;
+
+
+Tables INDEX BY (arrays associatifs) ------------------------------
+
+	- Sont des structures PL/SQL avec deux colonnes 
+		- Clé primaire de type entier ou chaîne de caractères 
+		- Colonne de données de type scalaire ou record 
+	- Ne sont pas limitées en taille 
+
+	TYPE ename_table_type IS TABLE OF employees.last_name%TYPE INDEX BY PLS_INTEGER; 
+	ename_table ename_table_type; 
+
+	Méthodes des tables INDEX BY
+		- EXISTS
+		- COUNT
+		- FIRST et LAST
+		- PRIOR
+		- NEXT
+		- DELETE
+
+
+
+	Table INDEX BY de records 
+		- Définir une table INDEX BY pour stocker l'intégralité 
+		d'une colonne d'une table 
+
+	DECLARE 
+	 TYPE emp_table_type IS TABLE OF employees%ROWTYPE INDEX BY PLS_INTEGER; 
+	 my_emp_table emp_table_type; 
+	 max_count NUMBER(3):= 104; 
+	BEGIN 
+	 FOR i IN 100..max_count LOOP 
+		SELECT * INTO my_emp_table( i ) FROM employees 
+		WHERE employee_id = i ; 
+	 END LOOP; 
+	 FOR i IN my_emp_table.FIRST..my_emp_table.LAST 
+	 LOOP 
+		DBMS_OUTPUT.PUT_LINE(my_emp_table( i ).last_name); 
+	 END LOOP; 
+	END; 
+
+
+Tables imbriquées --------------------------------------------------
+
+	- Fonctionnement similaire aux tables INDEX BY
+	- Valides au niveau du schéma 
+	- La clé primaire ne peut pas être négative 
+
+	DECLARE 
+	 TYPE location_type IS TABLE OF locations.city%TYPE; 
+	 offices location_type; 
+	table_count NUMBER; 
+	BEGIN 
+	 offices := location_type('Bombay','Tokyo','Singapore', 
+	'Oxford'); 
+	table_count := offices.COUNT(); 
+	 FOR i in 1..table_count LOOP 
+	 DBMS_OUTPUT.PUT_LINE(offices(i )); 
+	 END LOOP; 
+	END; 
+
+
+VARRAY -------------------------------------------------------------
+
+	- Similaires aux tables INDEX BY mais limités en taille 
+	- Valides au niveau du schéma 
+	- Différents des tables imbriquées par le stockage 
+	physique 	
+
+
+	TYPE location_type IS VARRAY(3) OF locations.city%TYPE; 
+	offices location_type; 
+
+
+
+Curseurs explicites ------------------------------------------------
+
+	Déclarer le curseur
+	Ouvrir le curseur
+	Charger la ligne courante dans des variables 
+	Test de l'existence d'autres lignes
+	Fermeture du curseur
+
+	Déclarer un curseur
+		DECLARE 
+		 CURSOR emp_cursor IS 
+		 SELECT employee_id, last_name FROM employees 
+		 WHERE department_id = 30; 
+
+	Ouvrir un curseur
+		OPEN emp_cursor; 
+
+
+	Extraction des données du curseur 
+		DECLARE 
+		 CURSOR emp_cursor IS 
+		 SELECT employee_id, last_name FROM employees 
+		 WHERE department_id = 30; 
+		empno employees.employee_id%TYPE; 
+		lname employees.last_name%TYPE; 
+		BEGIN 
+		 OPEN emp_cursor; 
+		 FETCH emp_cursor INTO empno, lname; 
+		 DBMS_OUTPUT.PUT_LINE( empno ||' '||lname); 
+		... 
+		END; 
+
+	Fermer le curseur 
+		LOOP 
+		 FETCH emp_cursor INTO empno, lname; 
+		 EXIT WHEN emp_cursor%NOTFOUND; 
+		 DBMS_OUTPUT.PUT_LINE( empno ||' '||lname); 
+		END LOOP; 
+		CLOSE emp_cursor; 
+		END; 
+
+	Parcourir le curseur jusqu'à plus de résultat :
+		DECLARE 
+		 CURSOR emp_cursor IS 
+		 SELECT employee_id, last_name FROM employees 
+		 WHERE department_id =30; 
+		empno employees.employee_id%TYPE; 
+		lname employees.last_name%TYPE; 
+		BEGIN 
+		OPEN emp_cursor; 
+		LOOP 
+		 FETCH emp_cursor INTO empno, lname; 
+		 EXIT WHEN emp_cursor%NOTFOUND; 
+		 DBMS_OUTPUT.PUT_LINE( empno ||' '||lname); 
+		END LOOP; 
+		CLOSE emp_cursor; 
+		END; 
+
+
+	La clause FOR UPDATE
+		SELECT ... 
+		FROM ... 
+		FOR UPDATE [OF column_reference][NOWAIT | WAIT n ]; 
+	- Utiliser des verrous explicites pour bloquer l'accès aux autres utilisateurs le temps de la transaction 
+	- Verrouiller les lignes avant un UPDATE ou un DELETE
+
+
+
+	La clause WHERE CURRENT OF
+		- Utiliser les curseurs pour mettre à jour ou supprimer la ligne courante 
+		- Verrouiller les lignes avec la clause FOR UPDATE
+		- Uniquement dans les curseurs explicites 
+			UPDATE employees 
+			SET salary = ... 
+			WHERE CURRENT OF emp_cursor; 
+
+
+
+	Curseurs et records
+
+		Stocke la ligne courante du curseur dans un record 
+
+		DECLARE 
+		 CURSOR emp_cursor IS 
+		 SELECT employee_id, last_name FROM employees 
+		 WHERE department_id = 30; 
+		emp_record emp_cursor%ROWTYPE; 
+		BEGIN 
+		OPEN emp_cursor; 
+		LOOP 
+		 FETCH emp_cursor INTO emp_record; 
+
+
+
+	Boucle FOR sur les curseurs 
+
+		- Permet de rapidement parcourir un curseur 
+		- Ouvre, parcourt, quitte et ferme implicitement 
+		- Record déclaré implicitement 
+
+		DECLARE 
+		 CURSOR emp_cursor IS 
+		 SELECT employee_id, last_name FROM employees 
+		 WHERE department_id =30; 
+		BEGIN 
+		 FOR emp_record IN emp_cursor
+		 LOOP 
+		 DBMS_OUTPUT.PUT_LINE(emp_record.employee_id
+		 ||' ' ||emp_record.last_name); 
+		 END LOOP; 
+		END; 
+
+
+
+	Attributs des curseurs explicites 
+
+		%ISOPEN 
+			Évalué à TRUE si le curseur est ouvert
+		%NOTFOUND 
+			Évalué à TRUE si l'extraction la plus récente ne retourne pas de ligne
+		%FOUND 
+			Évalué à TRUE si l'extraction la plus récente retourne une ligne
+		%ROWCOUNT 
+			Contient le nombre total de lignes retournées
+
+
+		IF NOT emp_cursor%ISOPEN THEN 
+		 OPEN emp_cursor; 
+		END IF; 
+		LOOP 
+		 FETCH emp_cursor... 
+
+
+		DECLARE 
+		empno employees.employee_id%TYPE; 
+		ename employees.last_name%TYPE; 
+		 CURSOR emp_cursor IS SELECT employee_id, 
+		last_name FROM employees; 
+		BEGIN 
+		 OPEN emp_cursor; 
+		 LOOP 
+		 FETCH emp_cursor INTO empno, ename; 
+		 EXIT WHEN emp_cursor%ROWCOUNT > 10 OR emp_cursor
+		%NOTFOUND; 
+		 DBMS_OUTPUT.PUT_LINE(TO_CHAR(empno) ||' '|| ename); 
+		 END LOOP; 
+		CLOSE emp_cursor; 
+		END; 
+
+
+	Curseurs avec paramètres 
+
+		DECLARE 
+		 CURSOR emp_cursor (deptno NUMBER) IS 
+		 SELECT employee_id, last_name
+		 FROM employees 
+		 WHERE department_id = deptno; 
+		dept_id NUMBER; 
+		lname VARCHAR2(15); 
+		BEGIN 
+		 OPEN emp_cursor (10); 
+		 ... 
+		 CLOSE emp_cursor; 
+		 OPEN emp_cursor (20);
+
+
+
+-------------------------------------------------------------
+-------------------------------------------------------------
+-------------------------------------------------------------
+-------------------------------------------------------------
+-------------------------------------------------------------
+-------------------------------------------------------------
+-------------------------------------------------------------
+
+
+
+
+
+Gestion des exceptions en PL/SQL 
+
+	- Une exception est une erreur levée pendant l'exécution d'un programme 
+		- Implicitement par le serveur Oracle 
+		- Explicitement par le programme 
+	- Elle est gérée 
+		- En l'attrapant 
+		- En la propageant au bloc parent
+
+
+	Types d'exceptions 
+	- Prédéfinies Oracle               ---> Levées implicitement
+	- Non-prédéfinies Oracle 
+	- Définies par l'utilisateur 	   ---> Levée explicitement
+	
+	La gestion des exceptions est dans la section EXCEPTION
+		- Plusieurs exceptions peuvent être gérées à la fois 
+		- Un seul cas est géré avant de quitter le bloc 
+		- La clause WHEN OTHERS est la dernière 
+
+	DECLARE 
+	 lname VARCHAR2(15); 
+	BEGIN 
+	 SELECT last_name INTO lname FROM employees WHERE 
+	 first_name='John'; 
+	 DBMS_OUTPUT.PUT_LINE ('John''s last name is : ' 
+	 ||lname); 
+	EXCEPTION 
+	 WHEN TOO_MANY_ROWS THEN 
+	 DBMS_OUTPUT.PUT_LINE ('Your select statement 
+	 retrieved multiple rows. Consider using a 
+	 cursor.'); 
+	END; 
+
+	Les erreurs prédéfinies Oracle 
+		- Référencées par leur nom 
+		- Exemples : 
+			NO_DATA_FOUND
+			TOO_MANY_ROWS
+			INVALID_CURSOR
+			ZERO_DIVIDE
+			DUP_VAL_ON_INDEX
+
+
+	Les erreurs non-prédéfinies Oracle 
+
+		Section déclarative :
+			Déclarer : Nommer l'exception
+			Associer : Code PRAGMA EXCEPTION_INIT
+		Section EXCEPTION
+			Référencer : Gérer l'exception levée
+
+
+		DECLARE 
+		 insert_excep EXCEPTION; 
+		 PRAGMA EXCEPTION_INIT(insert_excep, -01400); 
+		BEGIN 
+		 INSERT INTO departments 
+		 (department_id, department_name) VALUES (280, NULL); 
+		EXCEPTION 
+		 WHEN insert_excep THEN 
+			DBMS_OUTPUT.PUT_LINE('INSERT OPERATION FAILED'); 
+			DBMS_OUTPUT.PUT_LINE(SQLERRM); 
+		END; 
+
+
+	Fonctions pour gérer les exceptions 
+		- SQLCODE : retourne le code d'erreur 
+		- SQLERRM : retourne le message associé à l'erreur 
+
+		DECLARE 
+		 error_code NUMBER; 
+		 error_message VARCHAR2(255); 
+		BEGIN 
+		 ... 
+		EXCEPTION 
+		 ... 
+		 WHEN OTHERS THEN 
+			ROLLBACK; 
+			error_code := SQLCODE ; 
+			error_message := SQLERRM ; 
+			INSERT INTO errors (e_user, e_date, error_code, 
+			error_message) VALUES(USER,SYSDATE,error_code, 
+			error_message); 
+			END; 
+
+
+	Les erreurs définies par l'utilisateur 
+		Section déclarative :
+			Déclarer : Nommer l'exception
+		Section éxecutable :
+			Lever : Lever explicitement l'exception avec RAISE
+		Section EXCEPTION :
+			Référencer : Gérer l'exception levée
+
+
+		DECLARE 
+			invalid_department EXCEPTION; 
+			name VARCHAR2(20):='&name'; 
+			deptno NUMBER :=&deptno; 
+		BEGIN 
+			UPDATE departments 
+			SET department_name = name 
+			WHERE department_id = deptno; 
+			IF SQL%NOTFOUND THEN RAISE invalid_department; 
+			END IF; 
+			COMMIT; 
+		EXCEPTION 
+			WHEN invalid_department THEN 
+			 DBMS_OUTPUT.PUT_LINE('No such department id.'); 
+		END; 
+
+
+
+	La procédure RAISE_APPLICATION_ERROR
+
+		- Utilisée pour récupérer les messages d'erreur définis par l'utilisateur depuis les sous blocs 
+		- Évite les erreurs non gérées en les renvoyant à 
+		l'application 
+		- Numéros possibles : -20000 à -20999 
+		- Utilisée dans : 
+			- La section exécutable 
+			- La section exception 
+		- Retourne les erreurs de manière cohérente avec les 
+		autres erreurs du serveur Oracle 
+
+		BEGIN 
+		... 
+			 DELETE FROM employees 
+			 WHERE manager_id = v_mgr; 
+			 IF SQL%NOTFOUND THEN 
+				RAISE_APPLICATION_ERROR(-20202, 
+				'This is not a valid manager'); 
+			 END IF; 
+		... 
+
+		EXCEPTION 
+			 WHEN NO_DATA_FOUND THEN 
+			 	RAISE_APPLICATION_ERROR (-20201, 'Manager is not a valid employee.'); 
+		END; 
+
+
+
+Standardisation des constantes et des exceptions 
+
+	Standardiser les constantes 
+
+		- Convertir les variables en constantes quand nécessaire 
+		- Créer des spécifications de package et y placer toutes 
+		les constantes 
+
+		CREATE OR REPLACE PACKAGE constant_pkg IS 
+		 c_order_received CONSTANT VARCHAR(2) := 'OR'; 
+		 c_order_shipped CONSTANT VARCHAR(2) := 'OS'; 
+		 c_min_sal CONSTANT NUMBER(3) := 900; 
+		... 
+		END constant_pkg;
+
+
+
+	Standardiser les exceptions
+
+	     - Créer des spécifications de package et y placer tous les noms d'exceptions et les erreurs définies par l'utilisateur 
+
+
+		CREATE OR REPLACE PACKAGE error_pkg IS 
+		 fk_err EXCEPTION; 
+		 seq_nbr_err EXCEPTION; 
+		 PRAGMA EXCEPTION_INIT (fk_err, -2292); 
+		 PRAGMA EXCEPTION_INIT (seq_nbr_err, -2277); 
+		... 
+		END error_pkg; 
+
+
+
+
+
+
+-------------------------------------------------------------
+-------------------------------------------------------------
+-------------------------------------------------------------
+-------------------------------------------------------------
+-------------------------------------------------------------
+-------------------------------------------------------------
+-------------------------------------------------------------
+
+
+
+Créer des procédures stockées
+
+
+	Une procédure 
+		- Est un type de sous programme qui réalise une action 
+		- Peut être stockée dans la base de données comme un 
+		objet du schéma 
+		- Permet la réutilisation et la maintenance du code 
+
+	Syntaxe pour créer des procédures 
+		- Utiliser CREATE PROCEDURE suivi par le nom, les 
+		éventuels paramètres et le mot clé IS ou AS
+		- Ajouter OR REPLACE pour remplacer une procédure 
+		existante 
+		- Écrire un bloc PL/SQL avec des variables locales, un 
+		BEGIN et un END (ou END procedure_name) 
+
+
+	Les paramètres 
+	- Sont déclarés après le nom du sous programme 
+	- Transmettent des données entre l'environnement appelant et le sous programme 
+	- Sont utilisés comme des variables locales mais dépendent de leur mode : 
+		- IN (par défaut) pour fournir des valeurs au sous programme 
+		- OUT pour les retourner à l'environnement appelant 
+		- IN OUT pour les fournir, les modifier et les retourner 
+
+
+
+	Paramètres formels et actuels 
+		- Paramètres formels déclarés dans les spécifications du 
+		sous programme 
+			CREATE PROCEDURE raise_sal(id NUMBER,sal NUMBER) IS 
+			BEGIN ... 
+			END raise_sal;
+	    - Paramètres actuels : valeurs littérales, variables et 
+		expressions utilisées dans le sous programme 
+			emp_id := 100; 
+			raise_sal( emp_id, 2000) 
+
+
+	Utiliser les paramètres en mode IN
+
+		CREATE OR REPLACE PROCEDURE raise_salary
+		 (id IN employees.employee_id%TYPE, 
+		 percent IN NUMBER) IS 
+		BEGIN 
+		 UPDATE employees 
+		 SET salary = salary * (1 + percent/100) 
+		 WHERE employee_id = id; 
+		END raise_salary; 
+
+		EXECUTE raise_salary(176,10) 
+
+
+	Utiliser les paramètres en mode OUT
+		CREATE OR REPLACE PROCEDURE query_emp
+		 (id IN employees.employee_id%TYPE, 
+		 name OUT employees.last_name%TYPE, 
+		 sal OUT employees.salary%TYPE) IS 
+		BEGIN 
+		 SELECT last_name, salary INTO name, sal
+		 FROM employees 
+		 WHERE employee_id = id; 
+		END query_emp; 
+
+		DECLARE 
+		 emp_name employees.last_name%TYPE; 
+		 emp_sal employees.salary%TYPE; 
+		BEGIN 
+		 query_emp(171, emp_name, emp_sal); ... 
+		END; 
+
+
+	Utiliser les paramètres en mode IN OUT
+
+		CREATE OR REPLACE PROCEDURE format_phone
+		 (phone_no IN OUT VARCHAR2) IS 
+		BEGIN 
+		phone_no := '(' || SUBSTR(phone_no,1,3) || 
+		 ')' || SUBSTR(phone_no,4,3) || 
+		 '-' || SUBSTR(phone_no,7); 
+		END format_phone; 
+
+
+
+	Passage de paramètres 
+		- Par position : lister les paramètres actuels dans le même 
+		ordre que les paramètres formels 
+		- Par nom : lister les paramètres actuels dans un ordre 
+		aléatoire avec l'opérateur d'association (=>) pour les 
+		associer à un paramètre formel 
+		- Par combinaison : lister certains paramètres par 
+		position et d'autres par nom 
+
+
+		CREATE OR REPLACE PROCEDURE add_dept( 
+		 name IN departments.department_name%TYPE, 
+		 loc IN departments.location_id%TYPE) IS 
+		BEGIN 
+		 INSERT INTO departments(department_id, 
+		 department_name, location_id) 
+		 VALUES (departments_seq.NEXTVAL, name, loc); 
+		END add_dept; 
+
+
+		Par position :
+			EXECUTE add_dept ('TRAINING', 2500)
+		Par nom :
+			EXECUTE add_dept (loc=>2400, name=>'EDUCATION') 
+
+
+	Appel des procédures 
+
+		- En utilisant un bloc anonyme 
+		- En utilisant une autre procédure 
+
+		CREATE OR REPLACE PROCEDURE process_employees
+		IS 
+		 CURSOR emp_cursor IS 
+		 SELECT employee_id
+		 FROM employees; 
+		BEGIN 
+		 FOR emp_rec IN emp_cursor
+		 LOOP 
+		 raise_salary( emp_rec.employee_id, 10); 
+		 END LOOP; 
+		 COMMIT; 
+		END process_employees;
+
+
+
+	Supprimer une procédure 
+	
+		DROP PROCEDURE raise_salary; 
+
+
+
+Créer des fonctions stockées 
+
+	Une fonction 
+	- Est un bloc PL/SQL qui retourne une valeur 
+	- Peut être stockée dans la base de données comme un objet du schéma 
+	- Permet la réutilisation et la maintenance du code 
+	- Est appelée comme partie d'expression ou utilisée pour fournir des valeurs en paramètres 
+
+
+	CREATE OR REPLACE FUNCTION get_sal
+	 (id employees.employee_id%TYPE) 
+	 RETURN NUMBER IS 
+	 sal employees.salary%TYPE := 0; 
+	BEGIN 
+	 SELECT salary INTO sal
+	 FROM employees 
+	 WHERE employee_id = id; 
+	 RETURN sal; 
+	END get_sal;
+
+
+	Appeler une fonction 
+	    - Comme partie d'une expression 
+
+	        - En utilisant des variables d'environnement 
+	        	VARIABLE salary NUMBER 
+				EXECUTE :salary := get_sal(100) 
+			- En utilisant des variables locales 
+				DECLARE sal employees.salary%type; 
+				BEGIN 
+				 sal := get_sal(100); 
+				 ... 
+				END; 
+
+
+		- Pour fournir des paramètres
+			EXECUTE dbms_output.put_line( get_sal(100)) 
+
+		- Dans les requêtes SQL (sujet à restrictions) 
+			SELECT job_id, get_sal( employee_id) FROM employees; 
+
+
+	Avantages des fonctions définies par l'utilisateur 
+	    - Étendre le SQL lorsque des manipulations sont trop complexes, délicates ou non disponibles nativement 
+		- Manipule les données sur le serveur Oracle et non dans l'application 
+
+
+	Les fonctions peuvent généralement être utilisées dans : 
+		- La liste des expressions d'un SELECT
+		- Les clauses conditionnelles WHERE et HAVING
+		- Les clauses CONNECT BY, START WITH, ORDER BY et GROUP BY
+		- La clause VALUE de l'ordre INSERT
+		- La clause SET de l'ordre UPDATE
+
+
+	Supprimer une fonction
+
+		DROP FUNCTION get_sal; 
+
+
+
+
+
+
+Créer des packages
+
+	Regroupe logiquement des composants liés : 
+		- Types PL/SQL 
+		- Variables, structures de données et exceptions 
+		- Procédures et fonctions 
+	Constitués de deux parties : 
+		- Spécification 
+		- Corps 
+	Permet de stocker plusieurs objets en mémoire d'un seul coup 
+
+	Avantages des packages 
+		- Maintenance : garde les composants logiquement liés 
+		ensemble 
+		- Masquage des informations : 
+			- Seules les spécifications sont visibles et accessibles 
+			- Le corps du package reste privé 
+		- Fonctionnalité : 
+			- Persistance des variables et curseurs 
+		- Overloading : 
+			- Plusieurs sous-programmes avec le même nom 
+
+
+
+	Package Specifiaction : ---> Public
+		Variable 
+		Déclaration procédure A
+
+	Package body : ----> Privé
+		Variable
+		Déclaration procedure B
+		Déclaration procedure A
+			Variable
+		BEGIN
+		...
+		END;
+
+
+
+
+	Créer des spécifications de package
+
+		CREATE OR REPLACE PACKAGE comm_pkg IS 
+		 std_comm NUMBER := 0.10; --initialisée à 0.10 
+		 PROCEDURE reset_comm( new_comm NUMBER); 
+		END comm_pkg; 
+
+		- STD_COMM est une variable globale initialisée à 0.10 
+
+		- RESET_COMM est une procédure publique utilisée pour réinitialiser le taux de commission. Elle est implémentée dans le corps du package 
+
+	Créer un corps de package 
+
+		- Les identifiants définis dans le corps sont privés et non visibles hors du corps du package 
+		- Les constructions publiques sont visibles dans le corps 
+
+
+		CREATE OR REPLACE PACKAGE BODY comm_pkg IS 
+		 FUNCTION validate(comm NUMBER) RETURN BOOLEAN IS 
+		 max_comm employees.commission_pct%type; 
+		 BEGIN 
+		 SELECT MAX(commission_pct) INTO max_comm
+		 FROM employees; 
+		 RETURN (comm BETWEEN 0.0 AND max_comm); 
+		 END validate; 
+		 PROCEDURE reset_comm (new_comm NUMBER) IS BEGIN 
+		 IF validate(new_comm) THEN 
+		 std_comm := new_comm; 
+		 ELSE RAISE_APPLICATION_ERROR(-20210, 'Bad 
+		Commission'); 
+		 END IF; 
+		 END reset_comm; 
+		END comm_pkg; 
+
+
+	Appeler une fonction définie dans le même package 
+
+		CREATE OR REPLACE PACKAGE BODY comm_pkg IS ... 
+		 PROCEDURE reset_comm( new_comm NUMBER) IS 
+		 BEGIN 
+		 IF validate(new_comm) THEN 
+		 std_comm := new_comm; 
+		 ELSE ... 
+		 END IF; 
+		 END reset_comm; 
+		END comm_pkg; 
+
+
+
+	Créer et utiliser un package sans corps 
+
+		CREATE OR REPLACE PACKAGE global_consts IS 
+		 mile_2_kilo CONSTANT NUMBER := 1.6093; 
+		 kilo_2_mile CONSTANT NUMBER := 0.6214; 
+		 yard_2_meter CONSTANT NUMBER := 0.9144; 
+		 meter_2_yard CONSTANT NUMBER := 1.0936; 
+		END global_consts; 
+
+		BEGIN DBMS_OUTPUT.PUT_LINE('20 miles = ' || 
+		 20 * global_consts.mile_2_kilo || ' km'); 
+		END; 
+
+		CREATE FUNCTION mtr2yrd(m NUMBER) RETURN NUMBER IS 
+		 BEGIN 
+		 RETURN (m * global_consts.meter_2_yard); 
+		 END mtr2yrd; 
+
+		EXECUTE DBMS_OUTPUT.PUT_LINE(mtr2yrd(1)) 
+
+
+	Supprimer un package 
+
+		- Spécifications et corps : 
+			DROP PACKAGE package_name; 
+
+		- Corps uniquement :
+			DROP PACKAGE BODY package_name; 
+
+
+
+

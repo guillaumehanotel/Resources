@@ -1,0 +1,25 @@
+
+Unix is basically an open standard, officially called POSIX. Meaning, if you create an OS and make it behave like this standard defines, it will be a Unix. Over time there have been many, some commercial, some educational, some recreational. HP created HPUX, Sun created Solaris ans SunOS, IBM created AIX. These are all Unixes.
+
+Linux happened because, like so many other things happen in the Open Source movement, Linus Torvalds had an itch to scratch. When he was a computer science student in Finland, he had an argument with his professor. This professor was using a simplistic educational Unix implementation called Minix. Torvalds disagreed with some assumptions by his professor, and set out to create an alternative to Minix. He called it Linux.
+
+Linux become popular at first because of several reasons: it was free, but more importantly, easily accessible - Linus published the source code. It was Open Source, which means that anybody can modify and redistribute the source code, as well as develop for it. It was designed to run on PCs, contrary to most Unixes, which required expensive proprietary hardware.
+
+Nobody copied Unix into Linux. Over the whole couple of decades of Linux development, contributors have been really careful about that. Linux is a completely from scratch implementation of POSIX. Nonetheless, there have been attempts to shoot it down based on copyright violation. Most notably, one of the first patent trolls bought SCO Unix, which at the time owned the Unix trademark and copyright, and used it to sue a lot of high-profile companies for using Linux. It was a bitter legal campaign, with an epic response by the Linux community and volunteers. It took several years, but SCO was finally defeated and their claim was shown to have no merit. Ever since, nobody has challenged Linux in that manner.
+
+
+
+
+Unix is an operating system developed at AT&T's Bell Labs research facility in the 1970s. The operating system was licensed to a number of companies that developed their own. Sun Microsystems made Solaris, Unversity of California, Berkeley made BSD which is the base of a number of other systems such as Mac OSX (which uses the Mach kernel developed by Carnegie-Mellon University) and the Playstation OS and many others.
+
+GNU is an open source effort to produce an OS that is compatible with Unix without using any of the code from it. Development was started by Richard Stallman in 1984. Most of the OS functionality was replicated but development on the OS kernel proceeded slowly.
+
+Linux is a OS kernel originally developed by Linus Torvalds in 1991. Unlike GNU, Linux does use some closed source code to work with hardware and isn't completely open source. Linux was released in a time when GNU's own OS kernel, Hurd, was incomplete and a lot of the GNU software packages were ready to be used if there just was an operating system kernel to use them with. Linux was that kernel and most of GNUs software was ported to work with Linux and you could get a working, Unix-compatible OS that was mostly open source.
+
+
+
+
+
+Unix - a commercial operating system developed by AT&T, and licensed to various other companies
+Linux - a free, open source Unix workalike
+GNU - a foundation that creates and promotes free, open source software, mostly on Unix type platforms...Linux uses many GNU packages

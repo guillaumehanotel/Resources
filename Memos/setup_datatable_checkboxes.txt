@@ -1,0 +1,54 @@
+1) Rajouter 1 <th> et 1 <td> vide
+2) ajouter le menu en haut du tableau
+
+	<div class="actions-entity d-none clearfix">
+	    <div id="btn-delete-organisations" role="button" class="btn-action-entity" data-toggle="tooltip" data-placement="bottom" title="Supprimer">
+	        <span class="icon-btn-action-entity"><i class="fas fa-trash"></i></span>
+	    </div>
+	</div>
+
+
+3) setup datatable
+
+	let i = 1;
+    $table_organisations = $('#table-organisations').DataTable({
+        "pageLength": 25,
+        "language": datatable_french_translation,
+        'dom':  "<'row mx-4'<'col-sm-12 col-md-3'l><'col-sm-12 col-md-5'f><'col-sm-12 col-md-4 table-actions-entity'>>" +
+        "<'row mx-4'<'col-sm-12'tr>>" +
+        "<'row mx-4 pb-4'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        'columnDefs': [
+            {
+                'render': function (data, type, row){
+                    let $md_checkbox =
+                        "<div class='md-checkbox'>" +
+                        "<input class='dt-checkboxes' id='check-" + i + "' type='checkbox'>" +
+                        "<label for='check-" + i++ + "'></label>" +
+                        "</div>";
+
+                    if (type === 'display'){
+                        return $md_checkbox;
+                    }
+                    return data;
+                },
+                'targets': 0,
+                'orderable': false,
+                'searchable': false,
+                'checkboxes': {
+                    'selectRow': true
+                }
+            }
+        ],
+        'select': {
+            'style': 'multi'
+        }
+    });
+
+
+4) appler ma fct d'init
+
+      initTable($organisations_index, $table_organisations);
+
+5) mettre le row-id dans le tr
+
+	<tr data-row-id="{{ $ticket->id }}">

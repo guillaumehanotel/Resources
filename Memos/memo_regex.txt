@@ -1,0 +1,4 @@
+Regex pour ajouter du contenu au début de chaque ligne :
+
+Find : ^[0-9]{1,3}  (de 1 à 3 chiffres)
+Replace : $0 -> fait référence à ce qui est selectionné dans le find

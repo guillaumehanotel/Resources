@@ -1,0 +1,121 @@
+
+/*----------- ENVIRONNEMENT VIRTUEL -----------*\
+
+
+# Dossier Python/Work/virtual_environment -> dossier contenant tous les env virtuels
+
+# Créer un environnement virtuel :
+virtualenv Python/Work/virtual_environment/new-environment
+
+# "dans le dossier de l'environnement"
+# Se connecter à l'environnement virtuel :
+source new-environment/bin/activate
+
+# Quitter l'environnement virtuel :
+deactivate
+
+\*---------------------------------------------*/
+
+
+
+/*----------- SCRAPY -----------*\
+
+# Dans l'environnement nouvellement créé
+
+# Nouveau projet Scrapy :
+scrapy startproject projectname
+
+# Créer un nouveau spider dans le dossier spider
+touch Python/Work/virtual_environment/new-environment/projectname/projectname/spiders/my_spider.py
+
+# Executer un spider :
+scrapy crawl nom_du_spider
+
+
+
+
+/*--- EXTRAIRE LA DONNEE ---*\
+
+# Executer un crawler sur une page en shell :
+scrapy shell 'http://quotes.toscrape.com/page/1/'
+
+	# Obtenir une réponse du crawl de type SelectorList
+	# qui représente une liste de Selector
+	response.css('title')
+	>>> [<Selector xpath='descendant-or-self::title' data='<title>Quotes to Scrape</title>'>]
+
+	# Obtenir une réponse en sélectionnant seulement 
+	# le texte de la balise (dans l'attribut data de l'objet Selector)
+	>>> response.css('title::text')
+	[<Selector xpath='descendant-or-self::title/text()' data='Quotes to Scrape'>]
+
+	# Obtenir une réponse en extrayant le contenu de l'attribut data
+	>>> response.css('title').extract()
+	['<title>Quotes to Scrape</title>']
+
+	# Obtenir une réponse en sélectionnant seulement 
+	# le texte de la balise et extrayant le contenu de l'attribut data
+	>>> response.css('title::text').extract()
+	['Quotes to Scrape']
+
+	# Obtenir la première réponse trouvée par le crawl -> retourne un
+	# Selector, et non plus un SelectorList
+	>>> response.css('title::text').extract_first()
+	'Quotes to Scrape'
+
+	# Alternative (à ne pas utiliser car peut retourner IndexError):
+	>>> response.css('title::text')[0].extract()
+	'Quotes to Scrape'
+
+
+	# Obtenir une réponse à partir d'une expression régulière :
+	>>> response.css('title::text').re(r'Quotes.*')
+	'Quotes to Scrape'
+	>>> response.css('title::text').re(r'Q\w+')
+	['Quotes']
+	>>> response.css('title::text').re(r'(\w+) to (\w+)')
+	['Quotes', 'Scrape']
+
+	# Ouvrir dans le navigateur :
+	>>> view(response)
+
+\*--- END EXTRAIRE LA DONNEE ---*/
+
+/*-------- XPATH -------*\
+
+	>>> response.xpath('//title')
+	[<Selector xpath='//title' data='<title>Quotes to Scrape</title>'>]
+
+	>>> response.xpath('//title/text()').extract_first()
+	'Quotes to Scrape'
+
+
+
+\*------END XPATH ------*/
+
+
+# Extraire les titres et les auteurs
+
+>>> quote = response.css("div.quote")[0]
+>>> title = quote.css("span.text::text").extract_first()
+>>> author = quote.css("small.author::text").extract_first()
+>>> tags = quote.css("div.tags a.tag::text").extract()
+					||
+					|| 
+					\/
+>>> for quote in response.css("div.quote"):
+...     text = quote.css("span.text::text").extract_first()
+...     author = quote.css("small.author::text").extract_first()
+...     tags = quote.css("div.tags a.tag::text").extract()
+...     print(dict(text=text, author=author, tags=tags))
+
+
+# Enregistrer les résutats du crawl dans un fichier :
+scrapy crawl quotes -o quotes.json
+
+# Extraire l'attribut href d'une balise :
+>>> response.css('li.next a::attr(href)').extract_first()
+
+
+
+\*----------- END SCRAPY ------------*/

@@ -1,0 +1,23 @@
+# Replace all occurences in file
+   sed -i 's:test:localhost:g' phpmyadmin.test
+
+# Output only file names
+   find ./  -printf "%f\n"
+
+# Determine whether a process is running or not
+   if pgrep -x "gedit" > /dev/null
+   then
+      echo "Running"
+   else
+      echo "Stopped"
+   fi
+
+
+# Check if directory exists
+  if [ -d "/tmp" ]; then
+    echo "tmp exists"
+  else
+    echo "tmp not found"
+  fi
+
+

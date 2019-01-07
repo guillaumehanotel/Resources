@@ -1,0 +1,17 @@
+
+Les logiciels ERP, pour une gestion centralisée
+
+Un logiciel ERP intervient quant à lui sur les processus commerciaux et l’échange de données entre les différents départements de l’entreprise. Il permet à l’entreprise de réduire ses coûts de production et d’être plus efficace grâce à l’analyse des KPI (indicateurs clés de performance) et à l’optimisation des processus entre départements. Le déploiement d’une solution ERP doit donc être étendu aux différents départements de l’entreprise. Ainsi, les données de vente pourront alimenter les objectifs de production, qui alimenteront à leur tour les prévisions financières, et ainsi de suite.
+
+Une solution ERP peut inclure plusieurs modules commercialisés, notamment :
+
+	- Production
+	- Ressources humaines / Paie
+	- Vente
+	- Inventaire
+	- Chaîne d’approvisionnement
+	- Finance et comptabilité
+
+En résumé, une solution ERP permet une gestion centralisée des départements qui continuent néanmoins à fonctionner de manière indépendante. L’utilisation d’une seule base de données offre les avantages clés suivants : interopérabilité des données, meilleure communication et meilleure fiabilité des données.
+
+Une solution ERP permet également une prise de décision plus avisée à l’échelle de l’entreprise. Par exemple, une commande est générée par le département des ventes, elle passe ensuite par le contrôle d’inventaire, puis par la facturation, par le département financier et arrive enfin à la production. Un logiciel ERP transforme ces processus en une série continue et efficace d’événements qui assure un meilleur suivi. Il peut intégrer un composant CRM, bien que nous recommandions l’utilisation d’un logiciel CRM dédié.

@@ -1,0 +1,178 @@
+
+## Models : Classe ORM
+
+# Créer un model :
+php artisan make:model Flight
+
+# Créer un model avec sa migration:
+php artisan make:model Flight -m
+
+
+=======================================================================
+
+## Migrations : Versionner son schéma de base de données
+(Créer une migration pour chaque version de table (je crois))
+
+# Créer une migration :
+php artisan make:migration create_users_table --create=users 
+php artisan make:migration constraints_users_table --table=users
+--create : Dans les méthodes up & down : Créer et détruit la table.
+--table : Quand on veut créer une migration pour une table déjà existante, et que l'on veut préciser laquelle
+
+# Exécuter une migration :
+php artisan migrate
+
+# Revenir à la dernière migration :
+php artisan migrate:rollback
+
+# Rollback & Migrate
+php artisan migrate:refresh
+
+# Rollback & Migrate avec les seeds
+php artisan migrate:refresh --seed
+
+
+=======================================================================
+
+## Controller
+
+# Créer un controller :
+php artisan make:controller PhotoController
+
+# Créer un controller avec les méthodes CRUD :
+php artisan make:controller PhotoController --resource
+
+# Créer un model avec les méthodes CRUD en spécifiant le Model associé
+php artisan make:controller PhotoController --resource --model=Photo
+
+
+=======================================================================
+
+
+## Seeds : Peupler sa base de données
+
+# Créer un seed : 
+php artisan make:seeder UsersTableSeeder
+
+# Exécuter tous les seeds :
+php artisan db:seed
+
+# Exécuter un seed :
+php artisan db:seed --class=UsersTableSeeder
+
+
+=======================================================================
+
+## Middleware
+
+# Créer un middleware :
+php artisan make:middleware AdminAccess
+
+# L'ajouter aux tableaux dans app\Http\Kernel.php :
+
+protected $middleware : run on every request
+
+protected $routeMiddleware : name the middleware
+
+protected $middlewareGroups : group middlewares
+
+=======================================================================
+
+## Blade
+
+# @yield() vs @section @show
+
+Using just @yield() you wont be able to have a default content.
+
+Using @section()..@show you'll be able to have a default content and you can do stuff like
+
+    <title>
+    @section('title')
+    Laravel
+    @show
+    </title>
+
+    @section('title')
+    @parent 
+    :: Some page
+    @stop
+
+    Which will result on
+
+    <title>
+    Laravel :: Some Page
+    </title>
+
+=======================================================================
+
+## Eloquent Relationships
+
+https://laravel.com/docs/5.6/eloquent-relationships
+https://stackoverflow.com/questions/23951222/eloquent-relations-attach-but-dont-save-to-has-many
+
+
+=======================================================================
+
+## Dependency / Service Injection
+
+use Some\Namespace\Services\SomeService;
+
+class SomeConttroller extends Controller {
+    private $some_service;
+
+    // Laravel know it has to inject an instance of SomeService when resolving the controller
+    public function __construct(SomeService $some_service){
+        $this->some_service = $some_service;
+    }
+}
+
+
+=======================================================================
+
+## Form Validation
+
+# Créer une validation de formulaire :
+php artisan make:request StoreUser
+
+# Type-hint la request pour une validation automatique :
+public function store(StoreUser $request){
+	...
+}
+
+
+=======================================================================
+
+## Custom Property in Model
+
+
+When you try to access a function in the model as a variable, laravel assumes you're trying to retrieve a related model. They call them dynamic properties. What you need instead is a custom attribute.
+
+!!!!
+BIEN AJOUTER LE 'GET'
+BIEN AJOUTER LE 'ATTRIBUTE'
+
+
+public function getLowestAttribute(){
+    return 'lowest price';
+}
+
+
+=======================================================================
+
+## Model : Difference between Relationships & Entity
+
+// Return a Relationship
+public function ticketAssignments() {
+    return $this->hasMany('Easytickets\TicketAssignment');
+}
+
+// Return a Relationship (because parenthesis)
+public function currentAssignment() {
+    return $this->ticketAssignments()->where('finished_at', '=', null);
+}
+
+// Return directly the entities (THERE ARE NO ADDITIONALS QUERIES)
+public function currentAssignment() {
+    return $this->ticketAssignments->where('finished_at', '=', null);
+}
+

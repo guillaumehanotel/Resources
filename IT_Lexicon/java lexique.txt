@@ -1,0 +1,62 @@
+java lexique :
+
+- SOAP :
+	Les services web de type Soap permettent l'appel d'une méthode d'un objet distant en utilisant un protocole web pour le transport (http en général) et XML pour formater les échanges. Les services web fonctionnent sur le principe client / serveur :
+	
+	un client appelle les services web
+	le serveur traite la demande et renvoie le résultat au client
+	le client utilise le résultat
+
+- JMS 
+
+	JMS, acronyme de Java Messaging Service, est une API fournie par Sun pour permettre un dialogue standard entre des applications ou des composants grâce àdes brokers de messages ou MOM (Middleware Oriented Messages). Elle permet donc d'utiliser des services de messaging dans des applications Java comme le fait l'API JDBC pour les bases de données.
+
+- JSP 
+
+	Les JSP (Java Server Pages) sont une technologie Java qui permet la génération de pages web dynamiques.
+	
+	La technologie JSP permet de séparer la présentation sous forme de code HTML et les traitements écrits en Java sous la forme de JavaBeans ou de servlets. Ceci est d'autant plus facile que les JSP définissent une syntaxe particulière permettant d'appeler un bean et d'insérer le résultat de son traitement dans la page HTML dynamiquement.
+
+- Struts 
+
+	Struts est un framework pour applications web développé par le projet Jakarta de la fondation Apache. C'est le plus populaire des frameworks pour le développement d'applications web avec Java.
+
+
+- EJB
+	
+	Les Entreprise Java Bean ou EJB sont des composants serveurs donc non visuels qui respectent les spécifications d'un modèle éditées par Sun. Ces spécifications définissent une architecture, un environnement d'exécution et un ensemble d'API.
+	
+	Le respect de ces spécifications permet d'utiliser les EJB de façon indépendante du serveur d'applications J2EE dans lequel ils s'exécutent, du moment que le code de mise en oeuvre n'utilise pas d'extensions proposées par un serveur d'applications particulier.
+	
+	Le but des EJB est de faciliter la création d'applications distribuées pour les entreprises.
+	
+	Une des principales caractéristiques des EJB est de permettre aux développeurs de se concentrer sur les traitements orientés métiers car les EJB et l'environnement dans lequel ils s'exécutent prennent en charge un certain nombre de traitements tel que la gestion des transactions, la persistance des données, la sécurité, ...
+
+
+- Spring 
+	
+	Spring est un socle pour le développement d'applications, principalement d'entreprises mais pas obligatoirement. Il fournit de nombreuses fonctionnalités parfois redondantes ou qui peuvent être configurées ou utilisées de plusieurs manières : ceci laisse le choix au développeur d'utiliser la solution qui lui convient le mieux et/ou qui répond aux besoins.
+	
+	Spring est ainsi un des frameworks les plus répandus dans le monde Java : sa popularité a grandie au profit de la complexité de Java EE notamment pour ses versions antérieures à la version 5 mais aussi grâce à la qualité et la richesse des fonctionnalités qu'il propose :
+	
+	son coeur reposant sur un conteneur de type IoC assure la gestion du cycle de vies des beans et l'injection des dépendances
+	l'utilisation de l'AOP
+	des projets pour faciliter l'intégration avec de nombreux projets open source ou API de Java EE
+	Spring était un framework applicatif à ses débuts mais maintenant c'est une véritable plate-forme composée du framework Spring, de projets qui couvrent de nombreux besoins et de middlewares.
+
+
+
+- AOP : Programmation Orienté Aspect
+
+
+
+- Ant
+- Maven
+- Tomcat
+
+
+
+
+
+
+

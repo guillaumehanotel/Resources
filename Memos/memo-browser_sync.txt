@@ -1,0 +1,4 @@
+browser-sync start --proxy "websiteperso.local/app_dev.php/" --files="web/assets/css/*.css, src/CVBundle/Resources/views/CV/*.twig"
+
+browser-sync start --proxy "websiteperso.local/app_dev.php/" --files="web/assets/css/*.css, web/assets/js/*.js, src/CVBundle/Resources/views/CV/*.twig, 
+src/CVBundle/Controller/*.php, src/BlogBundle/Resources/views/CV/*.twig, app/Resources/FOSUserBundle/views/Security/*.twig, app/Resources/SonataAdminBundle/views/*.twig, app/Resources/views/*.twig" --no-notify

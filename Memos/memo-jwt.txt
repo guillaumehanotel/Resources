@@ -1,0 +1,21 @@
+Fonctionnement JWT :
+
+A l'aide d'une librairie tierce, on va définir une clé secrète qui va servir à générer des tokens d'authentification.
+
+Lorsque que le user se connecte, on génère un token en encryptant son ID à l'aide d'une clef secrète. Ce token, doit ensuite être fourni dans le header 'Authorization' pour toutes les routes qui nécessitent une authentification.
+
+On va assigner un middleware aux routes concernés, et ce middleware va vérifier si :
+- le token existe
+- le token est valide
+- le token n'est pas expiré
+
+On va déchiffrer ce token et récupérer l'ID du user qui y était encrypté. A la suite de quoi, on va pouvoir requeter la BDD pour récupérer les infos du user pour la requête en cours.  
+
+Récap des besoins :
+
+- Utiliser une lib JWT pour manipuler les tokens et générer une clef secrète
+- 1 middleware qui check le token
+- assigner des routes à ce middleware : 
+	Laisser un accès public pour login / signup
+- au login et éventuellement au signup: générer un token et le renvoyer
+- éventuellement un service pour regrouper la généreration et la vérification des tokens

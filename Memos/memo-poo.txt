@@ -1,0 +1,66 @@
+Objet : correspond à une entité du monde réel : ex : vélo/école/tableau
+           	Possède : - des variables (caractéristiques d’un objet) :    - d’instances
+                                                       	                                             - statiques (partagées entre tous les objets)
+ 
+	- des méthodes (modifications de ses variables) :    - d’instances
+           	           	     	                                               - statiques (peut seulement modifier des variables statiques)
+ 
+Encapsulation : Permet de protéger les variables d’un objet en implémentant des méthodes permettant d’accéder ou de modifier les variables ;
+ 
+Classe : Une classe est une famille d’objet, chaque objet est une instance d’une classe.
+Avantage : réutilisabilité
+Moule d’un stylo = classe ; stylo = objet
+ 
+Prototype : La déclaration d’une méthode comporte :
+ - Son nom
+ - Ses paramètres 
+ - Son type de retour
+ 
+Signature : une méthode est identifiée par son nom et ses paramètres -> signature
+- Son nom
+- Ses paramètres 
+ 
+Une classe ne peut pas comporter plusieurs méthodes avec la même signature
+ 
+Surcharge de méthodes : Quand plusieurs méthodes ont le même nom mais pas les mêmes paramètres, on parle de surcharges
+ 
+Constructeur :  Sert à créer un nouvel objet : sa mission est d’initialiser les attributs d’un objet lors de sa création. Existe un constructeur par défaut. (new) . Une classe peut avoir plusieurs constructeurs, mais avec des paramètres différents : Surcharge de méthodes
+Polymorphisme : Le fait de définir plusieurs méthodes/constructeurs avec des signatures différentes dans une même classe
+ 
+Destructeur : Permet la destruction d’un objet
+ 
+Modificateurs d’accès : permet de définir la portée des classes/méthodes/attributs :
+-        Public : tout le monde peut y accéder (en général utilisé pour les méthodes)
+-        Private : Uniquement accessible au sein de la classe (utilisé pour les attributs qu’on veut protéger)
+ 
+sert à implémenter l’encapsulation
+
+
+Getters : Méthode servant à retourner une variable 
+
+Setters : Méthode permettant de modifier un attribut, prennent un paramètre 
+ 
+Héritage :  Permet de factoriser dans une super classe, les caractéristiques et comportements communs dans une ou plusieurs sous-classes
+Ex : dans la classe Véhicule contiendra tous les attributs et méthodes qui unissent voiture et camion
+ 
+Principe de substitution : Un objet d’une sous-classe pourra être utilisé à la place d’un objet de sa super classe.
+Ex : Véhicule twingo = new Voiture()  casting implicite
+L’inverse n’est pas possible !
+ 
+Casting explicite : Voiture twingo = (Voiture)new Véhicule() ;
+Mauvaise pratique
+ 
+Héritage et modificateurs d’accès : une classe mère ne peut pas accéder aux attributs privés d’une classe fille et inversement.
+Un attribut Protected sera lui accessible depuis la classe et ses sous-classes (mais déconseillé)
+ 
+Héritage et méthodes : l’héritage permet aussi de factoriser des méthodes, les classes filles pourront déclarer leurs propres méthodes
+Une méthode peut être présent dans la classe mère et ses sous classes, ayant toutes un comportement différent, mais le comportement par défaut sera, lui, défini dans la classe mère
+ 
+Lorsque l’on déclare dans une classe fille une méthode déjà existante dans une classe mère, on parle de redéfinition de méthode. On peut redéfinir autant de fois qu’il y a de classe fille.
+ 
+Héritage et constructeurs :  Dans le constructeur de la classe fille, on peut rappeler le constructeur de la classe mère avec le mot clé super , puis initialiser les attributs propres à la classe fille.
+
+Dans une interface , toutes les méthodes sont abstraites . - les interfaces peuvent hériter les unes des autres mais pas d’une classe . - peut pas instancier une interface . 
+classe qui implémente une interface est obligée d’en redéfinir toutes les méthodes 
+Intérêts ? forcer la redéfinitions de méthodes , permettre le multi-héritage , présentez la “carte de visite “ de l’objet .
+

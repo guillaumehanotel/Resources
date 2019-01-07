@@ -1,0 +1,30 @@
+
+
+Les fonctions Map, Filter et Reduce sont typiques de la programmation fonctionnelle.
+Elles sont indispensables en programmation fonctionelle car on a pas accès des boucles while/for.
+
+
+let numbers = [1, 2, 3, 4];
+
+Map : 
+	Fonction qui permet de modifier les items et d'y appliquer une transformation.
+	On passe en paramètre une fonction qui fera une transformation sur chaque item.
+
+	numbers.map(item => item * 10); // [10, 20, 30, 40];
+
+Filter :
+	Fonction qui permet de filtrer des éléments qui ne respectent pas une condition.
+	On passe en paramètre une fonction qui testera chaque item. (Vrai -> Conservé | Faux -> Eliminé)
+
+	numbers.filter(item => item % 2 === 0) // [2, 4];
+
+Reduce :
+	Fonction qui permet de faire des calculs sur des items d'un tableau (somme/soustraction)
+	On passe en paramètre une fonction qui prend en paramètre un accumulateur et un item du tableau et qui va faire une opération.
+	Le résultat renvoyé est l'accumulateur.
+
+	numbers.reduce((accumulateur, item) => accumulateur + item) // 10
+
+	let sum = notes.reduce(function(acc, note){
+		return acc + note;
+	}, 0);

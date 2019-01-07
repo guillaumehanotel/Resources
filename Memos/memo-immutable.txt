@@ -1,0 +1,22 @@
+L'immutabilité en programmation, est la propriété de ne pas muter un objet, c'est à dire de le modifier.
+
+Ce concept répond à la problématique que certaines opérations mutent un objet sans que l'on s'en rende compte.
+
+	let eleves = ['Jean'];
+	eleves.push('Marc');  // Mutation
+	eleves; 			  // ['Jean', 'Marc']	
+
+	let eleves = ['Jean'];
+	let nouvelle_classe = [...eleves, 'Marc']
+	nouvelle_classe;
+
+Pour éviter ce problème, il faut reprendre la valeur de la variable que l'on veut modifier et l'assigner à une autre variable (la 'cloner') en effectuant l'opération de modification voulue.
+
+De ce fait, la variable originale reste identique.
+
+	today = Moment();
+	future = today.clone().add('years', 1);
+	today === future // false
+
+Le problème qui peut se poser est lorsque que l'on clone un tableau d'1M d'items par exemple, qui prendra donc 2 fois plus de mémoire.
+Les langages fonctionnelles prennent en compte cet aspect et fonctionne par référence, ce qui permet d'optimiser la mémoire et la performance.

@@ -1,0 +1,159 @@
+XDOTOOL Memo :
+
+	WINDOW STACK : Désigne la pile de fenêtre enregistrée lorsqu'une commande est effectuée grâce aux commandes : 
+		- search
+		- getwindowfocus
+		- getactivewindow
+
+	getwindowfocus :
+		Retourne l'ID de la fenêtre qui a le focus et l'enregistre dans la Window Stack
+		Ex : xdotool getwindowfocus
+
+	getactivewindow : 
+		Retourne l'ID de la fenêtre qui a le focus
+		Cette commande est plus sûr que getwindowfocus
+		Ex : xdotool getactivewindow
+
+	getwindowname : 
+		Retourne le titre de la fenêtre 
+		Ex : xdotool getactivewindow getwindowname 
+			 xdotool getwindowname 37750878
+
+	getwindowpid :
+		Retourne le PID de la fenêtre sélectionnée
+		Ex : xdotool getactivewindow getwindowpid 
+			 xdotool getwindowpid 37750878
+
+	getwindowgeometry :
+		Affiche les dimensions de la fenêtre sélectionnée
+		Ex : xdotool getactivewindow getwindowgeometry
+		Window 37750878
+		  Position: 2,48 (screen: 0)
+		  Geometry: 954x1015
+
+	getdisplaygeometry : 
+		Affiche la résolution de l'écran ?
+
+	search :
+		Recherche des fenêtres selon une liste de critères
+		TODO : à approfondir
+
+	selectwindow :
+		Attend l'input de la souris pour sélectionner une fenêtre et afficher son ID par défaut.
+		Peut être chainer à une action (ex: fermer une fenetre) 
+		Ex: xdotool selectwindow windowkill
+
+	behave :
+		Permet de binder une action à un évènement pour une fenêtre en particulier
+		Ex: xdotool selectwindow behave %1 mouse-enter windowkill
+		Sélectionne une fenetre, puis lorsque la souris entre dedans, la fenetre est kill
+
+	behave_screen_edge :
+		Permet de binder une action à un évènement quand la souris touche un bord d'écran
+
+	click :
+		Permet de lancer un click de souris
+		Left mouse is 1, middle is 2, right is 3, wheel up is 4, wheel down is 5.
+		Ex : xdotool click --repeat 2 1 (double clic gauche)
+
+	getmouselocation :
+		Retourne la position de la souris
+		Ex : xdotool getmouselocation
+		x:478 y:891 screen:0 window:37750878
+
+	key : 
+		Permet de simuler l'appui d'une touche
+		Ex: xdotool key a
+
+	keydown :
+		Idem que key mais que l'évènement 'keydown'
+
+	keyup : 
+		Idem que key mais que l'évènement 'keyup'
+
+	mousedown :
+		Idem que click mais avec l'évènement 'mouse down'
+
+	mouseup :
+		Idem que click mais avec l'évènement 'mouse up'
+
+	mousemove :
+		Permet de bouger la souris à une position X Y
+		Ex : xdotool mousemove 800 800
+
+	mousemove_relative : 
+		Bouge la souris par rapport à la position actuelle de la solution.
+		Ex : xdotool mousemove_relative 50 -20
+
+	set_window :
+		Set properties about a window.
+
+	type : 
+		Type something
+		Ex : xdotool type toto
+		toto
+
+	windowactivate :
+		Activate the window. This command is different from windowfocus: if the window is on another desktop, we will switch to that desktop. It also uses a different method for bringing the window up. I recommend trying this command before using windowfocus, as it will work on more window managers.
+
+	windowfocus : 
+		Focus a window.
+
+	windowkill ;
+		Kill a window.
+
+	windowclose :
+
+	windowmap :
+		Map a window. In X11 terminology, mapping a window means making it visible on the screen.
+
+	windowminimize :
+		Minimize a window.
+
+	windowmove :
+		Bouge la fenêtre à une position donnée
+		Ex : xdotool selectwindow windowmove 500 500
+
+	windowraise :
+		Raise the window to the top of the stack.
+
+	windowreparent :
+		Reparent a window. This moves the source_window to be a child window of destination_window.
+
+	windowsize
+		Set the window size of the given window.
+		Ex : xdotool selectwindow windowsize 100% 50%
+
+	windowunmap :
+		Unmap a window, making it no longer appear on your screen.
+
+	set_num_desktops :
+		Change le nb de workspace.
+
+	get_num_desktops :
+		Affiche le nb de workspace.
+
+	set_desktop :
+		Change le workspace courant.
+
+	get_desktop :
+		Affiche le N° du workspace courant.
+
+	set_desktop_for_window :
+		Change le workspace de la fenêtre sélectionnée
+		Ex : xdotool selectwindow set_desktop_for_window 2
+
+	get_desktop_for_window :
+		Affiche le N° du workspace de la fenêtre sélectionnée
+
+	get_desktop_viewport : 
+		Report the current viewport's position.
+
+	set_desktop_viewport :
+		Move the viewport to the given position.
+
+	exec :
+		Execute a program. This is often useful when combined with behave_screen_edge to do things like locking your screen.
+
+	sleep :
+		Sleep for a specified period.

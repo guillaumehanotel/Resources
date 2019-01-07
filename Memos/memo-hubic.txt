@@ -1,0 +1,27 @@
+
+BACKUP HUBIC
+
+Connexion :
+
+	hubic login guillaumehanotel@orange.fr
+	<password>
+
+Création :
+
+	hubic backup create '/home/nom_utilisateur/Images'
+
+	Paramètres :
+		--name=NAME 
+		Donner un nom à la sauvegarde
+
+		--frequency=never|hourly|daily|weekly
+
+		--keep_deleted ou --drop_deleted au choix : avec la première, quand vous supprimez un fichier sur votre ordinateur, il est conservé sur le cloud ; avec la 2e, il est supprimé. Par défaut, --keep_deleted. 
+
+Lancer une sauvegarde :
+	
+	hubic backup update nom_sauvegarde
+
+	
+
+

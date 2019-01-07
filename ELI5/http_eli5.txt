@@ -1,0 +1,13 @@
+HTTP (Hypertext Transfer Protocol) was something invented by Tim Berners Lee in 1989 at CERN when he created the WWW (he didn't do it from scratch and built on the ideas of others before him, but he created the version we now all use).
+
+It is a protocol (hence the P in the name) originally designed to transfer (the T) a certain sort of file called a HTML (Hypertext Markup Language) file (which is where we get the HT from).
+
+This means it was meant as a protocol (a set of rules) to transfer websites from one computer to another.
+
+There were other protocols with more generic applications before that like FTP (File Transfer Protocol) but HTTP was especially designed for websites.
+
+The was we use it today is to have a webbrowser (like the one you are using right now to view this website) communicate with a webserver and transfer files (like the website you are viewing right now) from the server to the browser so you can view it on your computer/phone/whatever.
+
+The HTTP is used to send the website from the server to your computer.
+
+It can also be used to transfer other types of files but websites is what it was built for and is mostly used for.

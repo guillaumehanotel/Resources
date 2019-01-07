@@ -1,0 +1,24 @@
+	# ============================
+	# API
+	# ============================
+
+	Lorsqu'une ressource possède une relation avec une autre ressource. 
+	La route API de cette ressource doit faire référence à la ressource à laquelle elle appartient
+	
+	Exemple :
+
+	Un Post possède un User
+	Un Comment possède un Post
+
+	Pour créer un post, l'URL ressemblera à ça : 
+	POST http://app.com/api/v1/users/12/posts
+	Car un post a besoin d'un userId pour être créé
+
+	Pour créer un commentaire, l'URL ressemblera à ça : 
+ 	POST http://app.com/api/v1/posts/7/comments
+	Car un comment a besoin d'un postId pour être créé
+
+
+
+
+

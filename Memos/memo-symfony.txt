@@ -1,0 +1,179 @@
+
+# Créer un nouveau projet :
+symfony new my_project_name
+OU
+composer create-project symfony/framework-standard-edition my_project_name
+
+# Créer la base de données :
+php bin/console doctrine:database:create
+
+# Supprimer la base de données :
+php bin/console doctrine:database:drop --force
+
+# Mettre à jour la base de données :
+php bin/console doctrine:schema:update --force
+
+# Voir les requetes de différence entre le schéma et la BDD (avant de mettre à jour) :
+php bin/console doctrine:schema:update --dump-sql
+
+
+
+
+# Créer une entité :
+php bin/console doctrine:generate:entity
+AppBundle:User
+
+# Mettre à jour une entité (Ajout attribut sans get/set) :
+php bin/console doctrine:generate:entities <Bundle_Name>:<Entity_Name>
+
+# Générer un XML des tables à partir d'une BDD existante
+php bin/console doctrine:mapping:import --force AppBundle xml
+
+# Générer les entités avec le XML
+php bin/console doctrine:mapping:convert annotation ./src
+
+
+# Récupérer l'utilisateur connecté :
+$auth_checker = $this->get('security.authorization_checker');
+$token = $this->get('security.token_storage')->getToken();
+$user = $token->getUser();
+
+# Savoir si le visiteur est connecté :        
+$is_connected = $this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY');
+
+
+
+## Migrations : Versionner son schéma de base de données
+
+# Créer une migration manuellement :
+php bin/console doctrine:migrations:generate
+
+# Créer une migration automatiquement en fonction des entités :
+php bin/console doctrine:migrations:diff
+
+# Lancer les migrations :
+php bin/console doctrine:migrations:migrate
+
+# Lancer une migration :
+php bin/console doctrine:migrations:execute 00001_init_sql
+
+
+
+## Fixtures : Ajouter des données en BDD (par défaut)
+
+# Install
+	- https://github.com/Webonaute/DoctrineFixturesGeneratorBundle/blob/master/Resources/doc/index.md
+
+	# Générer les Fixtures automatiquement from BDD
+	php bin/console doctrine:generate:fixture --snapshot --overwrite
+
+	# Mettre à jour le schéma BDD
+	php bin/console doctrine:schema:update --force
+
+	# Modifier chaque Fixture : 
+	remplacer extends AbstractFixture
+	par extends Fixture
+	(use Doctrine\Bundle\FixturesBundle\Fixture;)
+
+
+# Load All Fixtures 
+php bin/console doctrine:fixtures:load
+
+
+
+
+
+## Imports
+
+# Import Route Annotation
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
+# Import paramètre Request
+use Symfony\Component\HttpFoundation\Request;
+
+# Import extends Controller
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+
+
+## Twig 
+
+# Appeler une méthode qui renvoit une page twig :
+{{ render(controller("OCPlatformBundle:Advert:menu", {'limit': 2})) }}
+
+# Appeler une page twig :
+{{ include("OCPlatformBundle:Advert:form.html.twig") }}
+
+# Prendre en compte les \n dans les chaines de caractères :
+{{ experience.description|nl2br }}
+
+# Check si le visiteur est connecté :
+    {% if app.user %}
+        <p>co</p>
+    {% else %}
+        <p>pas co</p>
+    {% endif %}
+
+# Check Role
+{% if is_granted('ROLE_ADMIN') %} ... {% endif %}
+
+# Ajouter une extension Twig :
+Créer une classe CVBundle/Twig/CVTwigExtension
+
+	<?php
+
+	namespace CVBundle\Twig;
+	use Symfony\Component\DependencyInjection\ContainerInterface;
+
+	class CVTwigExtension extends \Twig_Extension {
+
+	    protected $container;
+
+	    public function __construct(ContainerInterface $container){
+	        $this->container = $container;
+	    }
+
+	    public function getFunctions() : array {
+	        return [
+	            new \Twig_SimpleFunction('date_diff', array($this, 'date_diff')),
+	        ];
+	    }
+
+	    public function date_diff($begin, $end) {
+
+	    }
+
+
+
+
+
+
+
+
+
+
+## Repository - Fonctions personnalisé pour les entités
+
+# Créer une classe CVBundle/Repository/ExperienceRepository
+
+	<?php
+
+	namespace CVBundle\Repository;
+	use Doctrine\ORM\EntityRepository;
+
+	class ExperienceRepository extends EntityRepository {
+	    public function findAll() {
+	        return $this->findBy([], ['ordre' => 'ASC']);
+	    }
+	}
+
+
+	# Ajouter ce Repository à l'entité associé
+
+	/**
+	 * Experience
+	 *
+	 * @ORM\Table(name="experience")
+	 * @ORM\Entity(repositoryClass="CVBundle\Repository\ExperienceRepository")
+	 */
+	class Experience {
