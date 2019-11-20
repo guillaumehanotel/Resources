@@ -1,0 +1,91 @@
+Build Tools :
+- Maven
+- Gradle
+- Ant
+
+Application Server :
+- Tomcat
+- Jetty
+- Wildfly
+- JBoss EAP
+- WebLogic
+- WebSphere
+- Glassfish
+
+Web Frameworks :
+- Spring
+ (Spring MVC : 
+ composant de Spring)
+ (Spring Boot : permet de 
+ simplifier le démarrage 
+ d'un projet Spring)
+- JSF
+- Vaadin
+- GWT
+- Play 2
+- Struts 2
+- Grails
+- Wicket
+- Dropwizard
+
+Continuous Integration server :
+- Jenkins
+- Bamboo
+- Teamcity
+
+Test :
+- JUnit
+
+Virtualisation :
+- Docker
+- AWS ECS
+
+ORM :
+- Hibernate
+- iBatis
+
+Database :
+- Oracle
+- MySQL
+- PostgreSQL
+- MongoDB
+- Redis
+
+Technos/Concepts à connaitre :
+- JHipster
+- (CMMi niveau 3)
+- Angular2 / Backbones / NodeJS
+- Agile / SCRUM
+- Microservice
+- Restful API (Jersey)
+- ELK (ElasticSearch/Kibana/Logstash)
+- ElasticSearch
+- Apache Tapestry
+- Apache Solr
+- Apache Axis
+- Apache Lucene
+- RabbitMQ
+- Cloud Provider Experience (AWS, M. Azure, Gcloud)
+
+- Experience in code documentation with Atlassian Confluence
+- SCRUM experience with the Atlassian Jira ticketing tool
+- Experience using the ticketing application Jira
+
+Notions à connaître :
+- garbage collector
+- TreeMap / HashMap
+- volatile
+- Externizable / Serializable
+- (~ghost)
+
+Trees
+Hash Tables
+OOP, Systems
+Big O
+Recursion
+Stacks/Queues
+Arrays
+Linked Lists
+Algorithms: BFS, DFS, 
+Binary Search, Merge Sort, 
+Quick Sort

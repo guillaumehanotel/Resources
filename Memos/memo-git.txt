@@ -1,3 +1,13 @@
+Move staged changes to another branch
+  git stash
+  git checkout correct-branch
+  git stash pop
+
+Uncommit
+  https://stackoverflow.com/questions/2845731/how-to-uncommit-my-last-commit-in-git
+
+
+
 Créer un nouveau repository:
 
 - git init

@@ -1,0 +1,52 @@
+<VirtualHost *:80>                                                  
+
+	ServerName dev.linuxtricks.fr                               
+        ServerAlias dev.linuxtricks.fr                              
+        ServerAdmin webmaster@linuxtricks.fr                         
+
+        DocumentRoot "/var/www/localhost/htdocs/dev/"               
+
+        <Directory "/var/www/localhost/htdocs/dev/">                
+                Options Indexes FollowSymLinks                      
+                AllowOverride All                                   
+                Require all granted                                 
+        </Directory>                                                
+
+        ErrorLog /var/log/apache2/dev.linuxtricks.fr-error_log      # Délocaliser pour ce vhost les logs d'erreur
+        TransferLog /var/log/apache2/dev.linuxtricks.fr-access_log  # Délocaliser pour ce vhost les logs d'accès
+
+</VirtualHost>                                                      
+
+
+== DIRECTIVES ==
+
+A l'arrivée d'une requête, le serveur va rechercher l'argument de section <VirtualHost> présentant la meilleure (la plus exacte) 
+correspondance avec la paire adresse IP/port utilisée dans la requête. Si plusieurs serveurs virtuels possèdent cette même paire adresse IP/port, 
+Apache va ensuite comparer les valeurs des directives ServerName et ServerAlias avec le nom de serveur présent dans la requête.
+
+<VirtualHost> : Définition d'un nouveau serveur virtuel qui contient au moins un ServerName pour désigner le serveur concerné et un DocumentRoot pour préciser l'emplacement du 
+sytème de fichiers pour ce serveur. On définit également une adresse IP et un port pour ce serveur (*:80)
+
+ServerName : Nom du serveur virtuel auquel celui-ci doit répondre
+
+ServerAlias : Permet de définir des noms alternatifs du serveur virtuel
+
+ServerAdmin : Permet de définir l'adresse de contact que le serveur va inclure dans tout message d'erreur qu'il envoie au client
+
+DocumentRoot : Racine des fichiers du serveur virtuel 
+
+<Directory> : Regroupe un ensemble de directives qui ne s'appliquent qu'au répertoire du système de fichiers, à ses sous-répertoires, et à leur contenu
+
+Options : Permet de définir les fonctionnalités de serveur disponibles pour un répertoire particulier
+	All : Toutes les options excepté MultiViews.
+	FollowSymLinks : Le serveur va suivre les liens symboliques dans le répertoire concerné
+	Indexes : Si une URL requise correspond au répertoire concerné, et si aucun DirectoryIndex n'est défini pour ce répertoire, renvoie un listing formaté du répertoire.
+	Multiviews : Les vues multiples à contenu négocié sont autorisées. cf : https://httpd.apache.org/docs/2.4/fr/content-negotiation.html
+
+AllowOverride : Lorsque le serveur trouve un fichier .htaccess, il doit savoir lesquelles des directives placées dans ce fichier sont autorisées à modifier la configuration préexistante.
+
+Require : Vous contrôlez les fichiers auxquels on peut avoir accès, et à la source en autorisant les adresse IP qui peuvent voir tel ou tel fichier.
+
+
+
+

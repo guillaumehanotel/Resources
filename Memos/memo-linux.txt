@@ -1,3 +1,9 @@
+Emplacement des 'executables' du menu :
+	~/.local/share/applications/
+	/usr/share/applications/
+
+Lancement des paramètres Xfce4 :
+	xfce4-settings-manager&
 
 Changer la résolution en ligne de commande :
 	xrandr --output HDMI-2 --mode 1920x1080
@@ -6,7 +12,6 @@ Executer un script au démarrage :
 
 	/etc/profile.d : dossier avec des scripts qui se lancent au démarrage
 	Ajouter le sien : /etc/profile.d/my_init.sh
-
 
 Redefine root password :
 	sudo passwd

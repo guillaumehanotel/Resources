@@ -1,4 +1,36 @@
-Fonctionnement JWT :
+Le JWT est un moyen de rếpondre à la problématique d'authentification à travers une API.
+
+Principe :
+
+Le client va envoyer une requête pour se connecter avec ses informations (POST /login)
+Si les informations sont bonnes, le serveur va générer un token et le renvoyer en réponse à l'utilisateur.
+Ce token sert à authentifier l'utilisateur auprès du serveur.
+Comment ? En ajoutant ce token dans chacune des requêtes que le client fera par la suite
+(Dans le Header 'Authorization', sous la forme : "Bearer aaaaaaaa.bbbbbbbbb.cccccccc")
+
+Un JWT est composé de 3 parties séparés par des points : aaaaaaaa.bbbbbbbbb.cccccccc
+
+- un header
+- un payload (les "claims")
+- la signature
+
+Le header est un document JSON encodé en base 64 qui contient :
+- le type de token (ici JWT)
+- L'algo de chiffremen utilisé pour hasher le payload
+
+Le Payload (contenu) est un document JSON encodé en base 64 et qui contient les informations à échanger entre le client et le serveur.
+Ces informations sont appelées claims ou revendications. En règle générale, on fait transiter des informations sur l’identité de l’utilisateur, 
+mais il ne doit absolument pas contenir de données sensibles.
+
+La signature est composée d’un hash des éléments suivant :
+- Header
+- Payload
+- Secret
+
+Le secret est une signature détenue par le serveur. C’est de cette façon que notre serveur sera capable de vérifier les tokens existant et d’en signer des nouveaux.
+JWT permet donc d’échanger du contenu pour un utilisateur authentifié grâce à la clé secrète utilisée dans la signature. La signature permet également d’assurer l’intégrité du contenu.
+
+-- 
 
 A l'aide d'une librairie tierce, on va définir une clé secrète qui va servir à générer des tokens d'authentification.
 
@@ -19,3 +51,4 @@ Récap des besoins :
 	Laisser un accès public pour login / signup
 - au login et éventuellement au signup: générer un token et le renvoyer
 - éventuellement un service pour regrouper la généreration et la vérification des tokens
+

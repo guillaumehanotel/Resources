@@ -1,0 +1,18 @@
+MODELE OSI 
+
+---------------------------------------------------------------------------------------------------------------------------
+| Application                     Communication avec des logiciels            DNS, FTP, Telnet      |
+| Présentation                  Gestion de la syntaxe                                    GIF, ZIP, MD5           |
+| Session                             Contrôle du dialogue                                     SQL, NetBIOS          |
+| Transport                        Qualité de la transmission                           TCP, UDP                    |
+| Réseau                             Sélection du chemin                                       IP, ARP, ICMP          |
+| Liaison de données     Préparation de l’envoi sur le média           MAC, PPP                  |
+| Physique			                        Envoi sur le média physique                        STP, Fibre optique  |
+--------------------------------------------------------------------------------------------------------------------------
+
+
+ADRESSES PRIVEES
+
+Classe A : 10.0.0.0          à    10.255.255.255
+Classe B : 172.16.0.0     à    172.31.255.255
+Classe C : 192.168.1.0   à    192.168.255.255
